@@ -4,7 +4,7 @@
 \alias{detectTargetLevels}
 \title{detect target levels}
 \usage{
-detectTargetLevels(form, target)
+detectTargetLevels(target, data)
 }
 \arguments{
 \item{form}{your formula}
