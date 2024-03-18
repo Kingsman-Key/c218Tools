@@ -40,7 +40,7 @@ In academic paper, only one or two lines of regression tables were shown rather 
 # example code
 example(birthwt)
 bwt.mu <- nnet::multinom(low ~ smoke, bwt)
-bwt.mu$call[2] \%>\% as.formula() \%>\%  all.vars()
 res <- bwt.mu \%>\%
   c218Tools::sumMULTI()
+
 }

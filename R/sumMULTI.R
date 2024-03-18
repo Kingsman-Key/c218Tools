@@ -17,7 +17,7 @@
 sumMULTI <- function(model,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", desc = F, ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
   outcome <- all.vars(as.formula(model$call[[2]]))[1]
-  data <- model[["model"]]
+  data <- get(model[["call"]][["data"]])
   if(class(data[[target]]) == "numeric"){
     n1 <- 2
     n2 <- 2
