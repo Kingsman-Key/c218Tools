@@ -1,0 +1,303 @@
+---
+title: "Presentation"
+author: "Your Name"
+date: "The Date"
+output: 
+  officedown::rdocx_document:
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(ftExtra)
+library(officer)
+library(officedown)
+library(flextable)
+
+tableStyle <- flextable::set_flextable_defaults(
+  # post_process_html = autofit,
+  post_process_pdf = autofit,
+  post_process_docx = autofit,
+  font.family = "Times New Roman",
+  padding.bottom = 0,
+  padding.top = 0,
+  line_spacing = 1,
+  table.layout = "autofit"
+)
+
+```
+
+**Tables**
+
+
+```{r, echo=F}
+load(file = "../tables/fRTable1.Rdata")
+data <- fRTable1
+
+
+data[["Variable"]] <- str_remove(string = data[["Variable"]], pattern = " $")
+
+data[["Variable"]][data[["Variable"]] == "YFNL"] <- "Age"
+data[["Variable"]][data[["Variable"]] == "BMI.4f.CHN"] <- "BMI"
+data[["Variable"]][data[["Variable"]] == "anc5.strict.v2.2f"] <- "ANC5"
+data[["Variable"]][data[["Variable"]] == "apncu.2f"] <- "APNCU"
+data[["Variable"]][data[["Variable"]] == "apncu.4f"] <- "original APNCU"
+data[["Variable"]][data[["Variable"]] == "Average delay with 0.25 tolerance"] <- "Delay"
+data[["Variable"]][data[["Variable"]] == "Low risk"] <- "No"
+data[["Variable"]][data[["Variable"]] == "High risk"] <- "Yes"
+data[["Variable"]][data[["Variable"]] == "Average Lead with 0.25 tolerance"] <- "Advance"
+
+indentIndex <- which(str_detect(data[["Variable"]], pattern = "^ "))
+boldIndex <- which(!str_detect(data[["Variable"]], pattern = "^ |^$"))
+
+data %>% 
+  flextable::flextable() %>% 
+  theme_apa() %>% 
+  flextable::padding(i = indentIndex, j = 1, padding.left = 20) %>% 
+  add_header_row(top = T, values = c("Table 1. Distribution of socio-economic characteristics"), colwidths = ncol(data)) %>% 
+  align(i = 2, part = "header", align = "center") %>%  # set table name align
+  align(j = 1, align = "left", part = "body") %>% 
+  align(i = 1, part = "header", align = "left") %>% 
+  hline_top(border = fp_border_default(width = 0),  # set table name upper line width
+            part = "header") %>% 
+  bold(bold = T, part = "header") %>% 
+  bold(bold = T, i = boldIndex, j = 1, part = "body") %>% 
+  ftExtra::colformat_md() %>% 
+  line_spacing(x = ., space = 1, part = "all")
+
+
+```
+
+```{r Table3aAdvanceDelayBirthWeight, echo=F, ft.align="center"}
+# This is for you to make coneinuous outcome table
+load("../tables/fRTable3a.Rdata")
+data <- resTable3a
+data[] <- lapply(data[], function(x){
+  x <- str_replace(string = x, pattern = "\\*", replacement = " ^\\\\*^")
+  x <- str_replace(string = x, pattern = "\\$", replacement = " ^†^")
+  x <- str_replace(string = x, pattern = "\\#", replacement = " ^‡^")
+  x <- str_replace(string = x, pattern = "\\[-Inf\\,0\\]", replacement = "0")
+  x <- str_replace(string = x, pattern = "\\-", replacement = "\\\\-")
+})
+  # as.data.frame() %>% 
+  # dplyr::mutate(
+  #   grp = c(rep("Advance", 2), rep("Advance stratified by health situation", 4), rep("Delay", 3), rep("Delay stratified by health situation", 6))
+  # )
+dataName <- names(data)
+
+myHeader <- data.frame(
+  col_keys = dataName,
+  line1 = c("Advance/Delay", "Advance/Delay", "N (%)", "Model 1", "Model 2"),
+  line2 = c("Advance/Delay", "Advance/Delay", "N (%)", "β (se)", "β (se)")
+)
+col_keys <- c(dataName[1:4], "linebreak1", dataName[5])
+AdvanceDelayIndex <- which(str_detect(data$RISK_ASSESS, pattern = "Advance|Delay|Crossover"))
+pForInteractionIndex <- which(str_detect(data$RISK_ASSESS, pattern = "P for interaction"))
+lowHighRiskIndex <- which(str_detect(data$RISK_ASSESS, pattern = "Low|High"))
+data[["RISK_ASSESS"]][1] <- "Advance ^a^"
+data[["RISK_ASSESS"]][4] <- "Delay ^b^"
+data[["RISK_ASSESS"]][data[["RISK_ASSESS"]] == "Crossover analysis"] <- "Crossover analysis ^c^"
+
+
+
+data %>% 
+  flextable::flextable(col_keys = col_keys) %>% 
+  # as_grouped_data(groups = "grp") %>% 
+  # flextable::as_flextable(hide_grouplabel = TRUE) %>%
+  flextable::set_header_df( # set table name
+    mapping = myHeader,
+    key = "col_keys"
+  ) %>% 
+  merge_v(part = "header") %>% # combine header
+  merge_h(part = "header") %>% # combine header
+  bold(bold = T, part = "header") %>% 
+  align(align = "center", part = "header") %>% 
+  merge_at(i = AdvanceDelayIndex[1], j = 1:(ncol(data) + 1), part = "body") %>% 
+  align(i = AdvanceDelayIndex[1], align = "center", part = "body") %>% 
+  merge_at(i = AdvanceDelayIndex[2], j = 1:(ncol(data) + 1), part = "body") %>% 
+  align(i = AdvanceDelayIndex[2], align = "center", part = "body") %>% 
+  merge_at(i = AdvanceDelayIndex[3], j = 1:(ncol(data) + 1), part = "body") %>% 
+  align(i = AdvanceDelayIndex[3], align = "center", part = "body") %>% 
+  # merge_at(i = AdvanceDelayIndex[4], j = 1:(ncol(data) + 1), part = "body") %>% 
+  # align(i = AdvanceDelayIndex[4], align = "center", part = "body") %>% 
+  bold(i = AdvanceDelayIndex, bold = TRUE, part = "body") %>% 
+  merge_at(i = pForInteractionIndex[1], j = 1:2, part = "body") %>% 
+  align(i = pForInteractionIndex[1], j = 1:2, align = "center", part = "body") %>%  
+  bold(i = pForInteractionIndex, j = 1, bold = T, part = "body") %>% 
+  # merge_at(i = pForInteractionIndex[2], j = 1:2, part = "body") %>% 
+  # align(i = pForInteractionIndex[2], j = 1:2, align = "center", part = "body") %>% 
+  # merge_at(i = lowHighRiskIndex[1:2], j = 1, part = "body") %>% 
+  # merge_at(i = lowHighRiskIndex[3:4], j = 1, part = "body") %>% 
+  # merge_at(i = lowHighRiskIndex[5:7], j = 1, part = "body") %>% 
+  # merge_at(i = lowHighRiskIndex[8:10], j = 1, part = "body") %>% 
+  # bold(j = 1, bold = TRUE, part = "body") %>% 
+  theme_apa() %>%  
+  hline(i = 1, j = 4:6, border = fp_border(style = "solid", width = 0.5, color = "black"), part = "header") %>% 
+  empty_blanks(part = "header") %>%
+  hline(i = 2, j = 1:(ncol(data)+1), border = fp_border(style = "solid", width = 0.5, color = "black"), part = "header") %>% 
+  add_header_row(top = T, values = c("Table S2. Association between prenatal care average Advance/delay and birth weight"), colwidths = ncol(data) +1) %>% 
+  align(i = 1, j = ncol(data) + 1, align = "left", part = "header") %>% 
+  hline_top(border = fp_border_default(width = 0),  # set table name upper line width
+            part = "header") %>% 
+  
+  flextable::add_footer_lines(values = as_paragraph(as_sup("* "), "P < 0.05; ", as_sup("† "), "P < 0.01; ", as_sup("‡ "),  "P < 0.001;  ", as_sup("a "), "Model 1 was adjusted for age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, gestational age of the first visit, and gestational age of delivery; Model 2 was additionally adjusted for delay; ", as_sup("b "), "Model 1 was adjusted for age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, gestational age of the first visit, and gestational age of delivery; Model 2 was additionally adjusted for advance; ", as_sup("c "), "Model 1 was crude1; Model 2 was additionally adjusted for age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, gestational age of the first visit, and gestational age of delivery.")) %>% 
+  ftExtra::colformat_md() %>% 
+  line_spacing(x = ., space = 1, part = "all")
+```
+
+
+
+```{r, echo = F}
+# This table is for binary outcomes
+load(file = "your directory")
+
+data <- yourdata
+
+dataName <- names(data)
+myHeader <- data.frame(
+  col_keys = c(dataName),
+  line1 = c("Advance/Delay", "Advance/Delay", "Preterm", "Preterm", "Model 1", "Model 2"),
+  line2 = c("Advance/Delay", "Advance/Delay", "No", "Yes", "OR (95%CI)", "OR (95%CI)")
+)
+AdvanceDelayIndex <- which(str_detect(data$RISK_ASSESS, pattern = "Advance|Delay|Crossover"))
+pForInteractionIndex <- which(str_detect(data$RISK_ASSESS, pattern = "P for interaction"))
+lowHighRiskIndex <- which(str_detect(data$RISK_ASSESS, pattern = "Low|High"))
+data[] <- lapply(data[], function(x){ # This is used to replace
+  x <- str_replace(string = x, pattern = "\\[-Inf\\,0\\]", replacement = "0")
+  x <- str_replace(string = x, pattern = "\\*", replacement = " ^\\\\*^")
+  x <- str_replace(string = x, pattern = "\\$", replacement = " ^†^")
+  x <- str_replace(string = x, pattern = "\\#", replacement = " ^‡^")
+  x <- str_replace(string = x, pattern = "\\-", replacement = "\\\\-")
+  return(x)
+})
+
+col_keys <- c(dataName[1:4], "breakline1", dataName[5], "breakline2", dataName[6])
+data$RISK_ASSESS[1] <- "Advance ^a^"
+data$RISK_ASSESS[4] <- "Delay ^b^"
+data$RISK_ASSESS[8] <- "Crossover analysis ^c^"
+data %>% 
+  as.data.frame() %>% 
+  flextable::flextable(., col_keys = col_keys) %>% 
+  flextable::set_header_df( # set table name
+    mapping = myHeader,
+    key = "col_keys"
+  ) %>% 
+  # empty_blanks() %>% 
+  merge_v(part = "header") %>% # combine header
+  merge_h(part = "header") %>% # combine header
+  align(align = "center", part = "header") %>% # set header align
+  merge_at(i = AdvanceDelayIndex[1], j = 1:length(col_keys), part = "body") %>%
+  merge_at(i = AdvanceDelayIndex[2], j = 1:length(col_keys), part = "body") %>%
+  merge_at(i = AdvanceDelayIndex[3], j = 1:length(col_keys), part = "body") %>%
+  align(i = AdvanceDelayIndex[1:4], j = 1:length(col_keys), part = "body", align = "center") %>%
+  bold(i = AdvanceDelayIndex[1:4], bold = T, part = "body") %>% 
+  bold(i = c(pForInteractionIndex), j = 1, bold = T, part = "body") %>% 
+  merge_at(i = pForInteractionIndex[1], j = 1:2, part = "body") %>%
+  bold( bold = TRUE, part="header") %>% # set header bold
+  theme_apa() %>%  # 
+  flextable::add_footer_lines(values = as_paragraph(as_sup("* "), "P < 0.05; ", as_sup("† "), "P < 0.01; ", as_sup("‡ "),  "P < 0.001;  ", as_sup("a "), "Model 1 was adjusted for  age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, and gestational age of the first visit; Model 2 was additionally adjusted for delay; ", as_sup("b "), "Model 1 was adjusted for  age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, and gestational age of the first visit; Model 2 was additionally adjusted for Advance; ")) %>% 
+  fix_border_issues(part = "header") %>% 
+  add_header_row(top = T, values = c("Table 2. Association between prenatal care Advance/delay and preterm birth"), colwidths = length(col_keys)) %>% # add table name
+  hline_top(border = fp_border_default(width = 0),  # set table name upper line width
+            part = "header") %>% 
+  hline(i = 2, j = 1:length(col_keys),border = fp_border(style = "solid", width = 0.5, color = "black"), part = "header") %>%
+  bold(bold = T, part = "header") %>% 
+  align(i = 1, align = "left", part = "header") %>% 
+  empty_blanks(part = "header") %>% 
+  hline(i = 3, j = 1:length(col_keys), border = fp_border(style = "solid", width = 0.5, color = "black"), part = "header") %>% 
+  ftExtra::colformat_md(part = "all") %>% 
+  line_spacing(x = ., space = 1, part = "all")
+
+```
+
+
+\newpage
+<!---BLOCK_LANDSCAPE_START--->
+
+```{r, echo = F}
+# This table is for multinomial outcomes
+load("J:/personal paper/dataset/result/prenatalDelay/tables/resTable3b.Rdata")
+
+data <- resTable3b %>% 
+  data.frame() 
+data[["RISK_ASSESS"]][1] <- "Advance ^a^"
+data[["RISK_ASSESS"]][4] <- "Delay ^b^"
+data[["RISK_ASSESS"]][data[["RISK_ASSESS"]] == "Crossover analysis"] <- "Crossover analysis ^c^"
+dataName <- names(data)
+data[] <- lapply(data[], function(x){
+  x <- str_replace(string = x, pattern = "\\*", replacement = " ^\\\\*^")
+  x <- str_replace(string = x, pattern = "\\$", replacement = " ^†^")
+  x <- str_replace(string = x, pattern = "\\#", replacement = " ^‡^")
+  x <- str_replace(string = x, pattern = "\\[-Inf\\,0\\]", replacement = "0")
+  x <- str_replace(string = x, pattern = "\\-", replacement = "\\\\-")
+})
+myHeader <- data.frame(
+  col_keys = c(dataName),
+  line1 = c("Advance/Delay", "Advance/Delay", "AGA", "SGA", "SGA", "SGA", "LGA", "LGA", "LGA"),
+  line2 = c("Advance/Delay", "Advance/Delay", "N (%)", "N (%)", "Model 1", "Model 2", "N (%)", "Model 1", "Model 2"),
+  line2 = c("Advance/Delay", "Advance/Delay", "N (%)", "N (%)", "OR (95%CI)", "OR (95%CI)", "N (%)", "OR (95%CI)", "OR (95%CI)")
+)
+col_keys <- c(dataName[1:3], "breakline1", dataName[4:6], "breakline2", dataName[7:9])
+
+AdvanceDelayIndex <- which(str_detect(data$RISK_ASSESS, pattern = "Advance|Delay|Cross"))
+pForInteractionIndex <- which(str_detect(data$RISK_ASSESS, pattern = "P for interaction"))
+lowHighRiskIndex <- which(str_detect(data$RISK_ASSESS, pattern = "Low|High"))
+data %>% 
+  flextable::flextable(col_keys = col_keys) %>% 
+  flextable::set_header_df( # set table name
+    mapping = myHeader,
+    key = "col_keys"
+  ) %>% 
+  bold( bold = TRUE, part="header") %>% 
+  theme_apa() %>%  # 以下部分用于添加header
+  merge_v(part = "header") %>% 
+  merge_h(part = "header") %>% 
+  align(align = "center", part = "header") %>% 
+  merge_at(i = AdvanceDelayIndex[1], j = 1:length(col_keys), part = "body") %>%
+  merge_at(i = AdvanceDelayIndex[2], j = 1:length(col_keys), part = "body") %>%
+  merge_at(i = AdvanceDelayIndex[3], j = 1:length(col_keys), part = "body") %>%
+  # merge_at(i = lowHighRiskIndex[1:3], j = 1, part = "body") %>% 
+  # merge_at(i = lowHighRiskIndex[4:6], j = 1, part = "body") %>% 
+  # merge_at(i = AdvanceDelayIndex[3], j = 1:length(col_keys), part = "body") %>%
+  # merge_at(i = AdvanceDelayIndex[4], j = 1:length(col_keys), part = "body") %>%
+  # merge_at(i = lowHighRiskIndex[1:2], j = 1, part = "body") %>%
+  # merge_at(i = lowHighRiskIndex[3:4], j = 1, part = "body") %>%
+  # merge_at(i = lowHighRiskIndex[5:7], j = 1, part = "body") %>%
+  # merge_at(i = lowHighRiskIndex[8:10], j = 1, part = "body") %>%
+  merge_at(i = pForInteractionIndex[1], j = 1:2, part = "body") %>%
+  # merge_at(i = pForInteractionIndex[2], j = 1:2, part = "body") %>%
+  fix_border_issues(part = "header") %>% 
+  flextable::add_footer_lines(values = as_paragraph(as_sup("* "), "P < 0.05; ", as_sup("† "), "P < 0.01; ", as_sup("‡ "),  "P < 0.001;  ", as_sup("a "), "Model 1 was adjusted for age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, and gestational age of the first visit; Model 2 was additionally adjusted for delay", as_sup("b "), "Model 1 was adjusted for  age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, and gestational age of the first visit; Model 2 was additionally adjusted for Advance;", as_sup("c" ), "Model 1 was crude; Model 2 was additionally adjusted for  age, education, BMI, risk pregnancy, parity, calendar year of the first visit, alcohol or cigarette, and gestational age of the first visit.")) %>% 
+  bold(i = c(AdvanceDelayIndex), bold = T, part = "body") %>% 
+  bold(i = c(AdvanceDelayIndex, pForInteractionIndex, lowHighRiskIndex), j = 1, bold = T, part = "body") %>% 
+  add_header_row(top = T, values = c("Table 3. Association between prenatal care average Advance/delay and SGA/LGA"), colwidths = length(col_keys)) %>% 
+  align(i = 1, part = "header", align = "left") %>% 
+  hline(i = 2, j = 1:length(col_keys), border = fp_border(style = "solid", width = 0.5),  part = "header") %>% 
+  hline(i = 3, j = 1:length(col_keys), border = fp_border(style = "solid", width = 0.5),  part = "header") %>% 
+  
+  hline_top(border = fp_border_default(width = 0), 
+            part = "header") %>% 
+  empty_blanks(part = "header") %>% 
+  hline(i = 4, j = 1:length(col_keys), border = fp_border(style = "solid", width = 0.5),  part = "header") %>% 
+  ftExtra::colformat_md(part = "all") %>% 
+  line_spacing(x = ., space = 1, part = "all")
+
+
+
+```
+
+<!---BLOCK_LANDSCAPE_STOP--->
+
+
+
+
+
+
+
+**Supplement**
+
+
+
+
+
