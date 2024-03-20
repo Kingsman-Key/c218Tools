@@ -13,16 +13,33 @@
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
-sumLM <- function(model,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", ...){
+sumLM <- function(model,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "mark", ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
   data <- model[["model"]]
-  if(class(data[[target]]) == "numeric"){
-    n1 <- 2
-    n2 <- 2
+  # judge n1 and n2
+
+  n1n2BothNull <- is.null(n1) & is.null(n2)
+  n1n2OneNull <- (!is.null(n1) & is.null(n2)) | (is.null(n1) & !is.null(n2))
+  if(n1n2BothNull|n1n2OneNull){
+    targetIsNumeric <- class(data[[target]]) == "numeric"
+    if(targetIsNumeric){
+      n1 <- 2
+      n2 <- 2
+    }
+    targetIsCharacterOrFactor <- class(data[[target]]) == "character"|class(data[[target]]) == "factor"
+    if(targetIsCharacterOrFactor){
+      n2 <- c218Tools::detectTargetLevels(target = target, data = data)
+    }
   }
-  if(class(data[[target]]) == "character"|class(data[[target]]) == "factor"){
-    n2 <- c218Tools::detectTargetLevels(target = target, data = data)
+  n1n2BothNotNull <- !is.null(n1) & !is.null(n2)
+  if(n1n2BothNotNull){
+    n1 <- n1
+    n2 <- n2
   }
+  if(n1n2OneNull){
+    warning("for arguments n1 and n2, only one element is set, automatically unset them all")
+  }
+
   res <- model %>%
     broom::tidy(., conf.int =T) %>%
     dplyr::mutate(
@@ -70,13 +87,14 @@ sumLM <- function(model,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", ...){
       dplyr::select(term, betase.s1, pvalue.4d) %>%
       dplyr::slice(n1, n2)
   },
-    res %>% # value
-      dplyr::select(term, betase.mark.excel) %>%
-      dplyr::slice(n1, n2)
+  res %>% # value
+    dplyr::select(term, betase.mark.excel) %>%
+    dplyr::slice(n1, n2)
   )
   if(n1 == 1){
     res[1,] <- "Ref."
   }
+
   if(toClip == T){
     if(.Platform$OS.type == "windows"){
       write.table(x = res, file = "clipboard", quote = F, sep = "\t")
