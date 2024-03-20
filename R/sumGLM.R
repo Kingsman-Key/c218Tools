@@ -74,17 +74,17 @@ sumGLM <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", des
   res <- switch(index, {
     res %>% #latex mark
       dplyr::select(term, or95.mark.latex) %>%
-      dplyr::slice(n1, n2)
+      dplyr::slice(n1:n2)
   },
   {
     res %>% # value
       dplyr::select(term, or95.s1, pvalue.4d) %>%
-      dplyr::slice(n1, n2)
+      dplyr::slice(n1:n2)
   },
   {
     res %>% # value
       dplyr::select(term, or95.mark.excel) %>%
-      dplyr::slice(n1, n2)
+      dplyr::slice(n1:n2)
   }
   )
   if(n1 == 1){

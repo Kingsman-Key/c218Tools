@@ -80,16 +80,16 @@ sumLM <- function(model,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "mark",
   res <- switch(index, {
     res %>% #latex mark
       dplyr::select(term, betase.mark.latex) %>%
-      dplyr::slice(n1, n2)
+      dplyr::slice(n1:n2)
   },
   {
     res %>% # value
       dplyr::select(term, betase.s1, pvalue.4d) %>%
-      dplyr::slice(n1, n2)
+      dplyr::slice(n1:n2)
   },
   res %>% # value
     dplyr::select(term, betase.mark.excel) %>%
-    dplyr::slice(n1, n2)
+    dplyr::slice(n1:n2)
   )
   if(n1 == 1){
     res[1,] <- "Ref."
