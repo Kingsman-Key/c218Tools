@@ -7,6 +7,12 @@
 #' @importFrom flextable flextable
 #' @importFrom ftExtra colformat_md
 #' @importFrom magrittr %>%
+#' @importFrom nnet multinom
 #' @importFrom speedglm speedglm
+#' @importFrom stats as.formula
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_replace_all
+#' @importFrom tidyr replace_na
+#' @importFrom utils write.table
 ## usethis namespace: end
 NULL

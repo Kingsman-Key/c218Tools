@@ -4,16 +4,7 @@
 \alias{sumMULTI}
 \title{summary multinomial logistic model}
 \usage{
-sumMULTI(
-  model,
-  n1 = 1,
-  n2 = 2,
-  latex = T,
-  toClip = F,
-  pType = "mark",
-  desc = F,
-  ...
-)
+sumMULTI(model, n1 = 1, n2 = 2, latex = T, toClip = F, pType = "mark", ...)
 }
 \arguments{
 \item{model}{a multinomial model object}
@@ -38,9 +29,10 @@ In academic paper, only one or two lines of regression tables were shown rather 
 }
 \examples{
 # example code
+library(MASS)
+library(nnet)
 example(birthwt)
 bwt.mu <- nnet::multinom(low ~ smoke, bwt)
-res <- bwt.mu \%>\%
-  c218Tools::sumMULTI()
+res <- c218Tools::sumMULTI(bwt.mu)
 
 }

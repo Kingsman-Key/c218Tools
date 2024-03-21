@@ -9,10 +9,10 @@
 #' @param pType whether to export your original P, defult to "mark", another option is "value"
 #' @param ... other elements inherited from write.table
 #' @export
-#' @example examples/sumLM_demo.R
+#' @example demo/sumLM_demo.R
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
-sumTableOne <- function(tableOne, latex = F){
+sumTableOne <- function(tableOne, latex = F, toClip = F, pType = "mark", ...){
   # clean the table header
   makeNamesTableOneLatex <- function(x){ # This is for table one output to latex
     a <- x[1,] %>%
@@ -67,5 +67,24 @@ sumTableOne <- function(tableOne, latex = F){
     })
     return(res)
   }
-
+  if(latex = T){
+    res <- tableOne %>%
+      makeNamesTableOneLatex(.) %>%
+      changeLevelTwoFactor(.)
+  }else if(latex = F){
+    res <- tableOne %>%
+      makeNamesTableOneExcel(.) %>%
+      changeLevelTwoFactor(.)
+  }
+  if(toClip == T){
+    if(.Platform$OS.type == "windows"){
+      write.table(x = res, file = "clipboard", quote = F, sep = "\t")
+    }
+    if(.Platform$OS.type == "unix"){
+      clip <- pipe("pbcopy", "w")
+      write.table(res, file=clip, quote = F, sep = "\t")
+      close(clip)
+    }
+  }
+  return(res)
 }

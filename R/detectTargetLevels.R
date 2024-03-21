@@ -1,15 +1,16 @@
 #' detect target levels
 #'
-#' @param form your formula
+#' @param target your formula
+#' @param data your data
 #' @export
 detectTargetLevels <- function(target,data){
-  if(class(data[[target]]) == "numeric"){
+  if(is.numeric(data[[target]])){
     n2 <- 2
     return(n2)
-  }else if(class(data[[target]]) == "character"){
+  }else if(is.character(data[[target]])){
     n2 <- length(unique(data[[target]]))
     return(n2)
-  }else if(class(data[[target]]) == "factor"){
+  }else if(is.factor(data[[target]])){
     n2 <- levels(data[[target]])
     return(n2)
   }

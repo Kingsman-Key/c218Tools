@@ -7,7 +7,9 @@
 detectTargetLevels(target, data)
 }
 \arguments{
-\item{form}{your formula}
+\item{target}{your formula}
+
+\item{data}{your data}
 }
 \description{
 detect target levels

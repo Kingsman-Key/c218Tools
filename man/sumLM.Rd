@@ -4,7 +4,7 @@
 \alias{sumLM}
 \title{summary linear model}
 \usage{
-sumLM(model, n1 = 1, n2 = 2, latex = T, toClip = F, pType = "mark", ...)
+sumLM(model, n1 = NULL, n2 = NULL, latex = T, toClip = F, pType = "mark", ...)
 }
 \arguments{
 \item{model}{a linear model object}
@@ -21,6 +21,9 @@ sumLM(model, n1 = 1, n2 = 2, latex = T, toClip = F, pType = "mark", ...)
 
 \item{...}{other elements inherited from write.table}
 }
+\value{
+return a tibble of regression table
+}
 \description{
 Convert results from linear model. This function take the first variable in independent variables as the target variable.
 }
@@ -31,5 +34,6 @@ In academic paper, only one or two lines of regression tables were shown rather 
 
 
 # example code
-res <- c218Tools::sumLM(form = "Sepal.Length~ Sepal.Width", data = iris, toClip = F)
+model <- lm("Sepal.Length~ Sepal.Width", data = iris)
+regTab <- c218Tools::sumLM(model = model)
 }

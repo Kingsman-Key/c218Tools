@@ -10,7 +10,7 @@
 #' @param desc whether to add description frequency to the final table
 #' @param ... other elements inherited from write.table
 #' @export
-#' @example examples/sumGLM_demo.R
+#' @example demo/sumGLM_demo.R
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 #'
@@ -19,12 +19,28 @@ sumGLM <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", des
   target <- all.vars(as.formula(model$call[[2]]))[2]
   outcome <- all.vars(as.formula(model$call[[2]]))[1]
   data <- model[["model"]]
-  if(class(data[[target]]) == "numeric"){
-    n1 <- 2
-    n2 <- 2
+  # judge n1 and n2
+
+  n1n2BothNull <- is.null(n1) & is.null(n2)
+  n1n2OneNull <- (!is.null(n1) & is.null(n2)) | (is.null(n1) & !is.null(n2))
+  if(n1n2BothNull|n1n2OneNull){
+    targetIsNumeric <- is.numeric(data[[target]])
+    if(targetIsNumeric){
+      n1 <- 2
+      n2 <- 2
+    }
+    targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
+    if(targetIsCharacterOrFactor){
+      n2 <- c218Tools::detectTargetLevels(target = target, data = data)
+    }
   }
-  if(class(data[[target]]) == "character"|class(data[[target]]) == "factor"){
-    n2 <- c218Tools::detectTargetLevels(target = target, data = data)
+  n1n2BothNotNull <- !is.null(n1) & !is.null(n2)
+  if(n1n2BothNotNull){
+    n1 <- n1
+    n2 <- n2
+  }
+  if(n1n2OneNull){
+    warning("for arguments n1 and n2, only one element is set, automatically unset them all")
   }
   res <- model %>%
     broom::tidy(x = ., exponentiate = T, conf.int = T) %>%
