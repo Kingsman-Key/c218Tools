@@ -2,7 +2,7 @@
 % Please edit documentation in R/sumLM.R
 \name{sumLM}
 \alias{sumLM}
-\title{summary linear model}
+\title{sum a(n) lm object}
 \usage{
 sumLM(model, n1 = NULL, n2 = NULL, latex = T, toClip = F, pType = "mark", ...)
 }
@@ -15,17 +15,22 @@ sumLM(model, n1 = NULL, n2 = NULL, latex = T, toClip = F, pType = "mark", ...)
 
 \item{latex}{whether to export your result in latex form}
 
-\item{toClip}{whether to export your result to clipboard. This function is still under construction. Don't change it.}
+\item{toClip}{whether to export your result to clipboard.}
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value"}
 
-\item{...}{other elements inherited from write.table}
+\item{...}{additional arguments passed to write.table function}
 }
 \value{
 return a tibble of regression table
 }
 \description{
-Convert results from linear model. This function take the first variable in independent variables as the target variable.
+sumReg summarizes information about the components of a model.
+A model component might be a single term in a regression, a single
+hypothesis, a cluster, or a class. Exactly what tidy considers to be a
+model component varies across models but is usually self-evident.
+If a model has several distinct types of components, you will need to
+specify which components to return.
 }
 \details{
 In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
@@ -35,5 +40,5 @@ In academic paper, only one or two lines of regression tables were shown rather 
 
 # example code
 model <- lm("Sepal.Length~ Sepal.Width", data = iris)
-regTab <- c218Tools::sumLM(model = model)
+regTab <- c218Tools::sumLM(model = model, toClip = T)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sumGLM.R
 \name{sumGLM}
 \alias{sumGLM}
-\title{summary logistic model}
+\title{sum a(n) glm object}
 \usage{
 sumGLM(
   model,
@@ -16,7 +16,7 @@ sumGLM(
 )
 }
 \arguments{
-\item{model}{a linear model object}
+\item{model}{a glm model object}
 
 \item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
 
@@ -24,16 +24,19 @@ sumGLM(
 
 \item{latex}{whether to export your result in latex form}
 
-\item{toClip}{whether to export your result to clipboard. This function is still under construction. Don't change it.}
+\item{toClip}{whether to export your result to clipboard.}
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value"}
 
-\item{desc}{whether to add description frequency to the final table}
-
-\item{...}{other elements inherited from write.table}
+\item{...}{additional arguments passed to write.table function}
 }
 \description{
-Convert results from linear model. This function take the first variable in independent variables as the target variable.
+sumReg summarizes information about the components of a model.
+A model component might be a single term in a regression, a single
+hypothesis, a cluster, or a class. Exactly what tidy considers to be a
+model component varies across models but is usually self-evident.
+If a model has several distinct types of components, you will need to
+specify which components to return.
 }
 \details{
 In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
@@ -46,4 +49,5 @@ In academic paper, only one or two lines of regression tables were shown rather 
 input <- mtcars
 am.data = glm(formula = am ~ cyl + hp + wt, data = input, family = "binomial")
 res <- sumGLM(am.data)
+res <- sumReg(am.data)
 }

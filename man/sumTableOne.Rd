@@ -4,22 +4,22 @@
 \alias{sumTableOne}
 \title{summary table one from tableone::CreateTableOne function}
 \usage{
-sumTableOne(tableOne, latex = F)
+sumTableOne(tableOne, latex = F, toClip = F, pType = "mark", ...)
 }
 \arguments{
 \item{latex}{whether to export your result in latex form}
-
-\item{model}{a linear model object}
-
-\item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
-
-\item{n2}{This is the second line to which you want to get from summary table. If not specified, it is automatically set when taking your function}
 
 \item{toClip}{whether to export your result to clipboard. This function is still under construction. Don't change it.}
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value"}
 
 \item{...}{other elements inherited from write.table}
+
+\item{model}{a linear model object}
+
+\item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
+
+\item{n2}{This is the second line to which you want to get from summary table. If not specified, it is automatically set when taking your function}
 }
 \description{
 Convert results from tableone::CreateTableOne
@@ -32,5 +32,5 @@ In academic paper, only one or two lines of regression tables were shown rather 
 
 # example code
 model <- lm("Sepal.Length~ Sepal.Width", data = iris)
-regTab <- c218Tools::sumLM(model = model)
+regTab <- c218Tools::sumLM(model = model, toClip = T)
 }

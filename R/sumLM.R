@@ -1,13 +1,10 @@
-#' summary linear model
+#' @templateVar class lm
+#' @template titleDescSumReg
 #'
-#' Convert results from linear model. This function take the first variable in independent variables as the target variable.
 #' @param model a linear model object
-#' @param n1 This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function
-#' @param n2 This is the second line to which you want to get from summary table. If not specified, it is automatically set when taking your function
-#' @param latex whether to export your result in latex form
-#' @param toClip whether to export your result to clipboard.
-#' @param pType whether to export your original P, defult to "mark", another option is "value"
-#' @param ... other elements inherited from write.table
+#' @template paramN1N2P
+#' @template paramLatexToClip
+#' @template paramUnusedDots
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumLM_demo.R

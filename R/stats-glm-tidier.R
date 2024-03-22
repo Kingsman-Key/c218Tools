@@ -6,12 +6,13 @@
 #' @template paramLatexToClip
 #' @template paramUnusedDots
 #' @export
+#' @return return a tibble of regression table
 #' @example demo/sumGLM_demo.R
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
-#'
-#'
-sumGLM <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", desc = F, ...){
+
+
+sumReg.glm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", desc = F, ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
   outcome <- all.vars(as.formula(model$call[[2]]))[1]
   data <- model[["model"]]
