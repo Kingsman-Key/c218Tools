@@ -15,11 +15,11 @@ sbjCnc <- function(mesh, st, toClip = FALSE){
   d <- paste0("(", a, "[Mesh Terms] OR ", c, ")")
   if(toClip == T){
     if(.Platform$OS.type == "windows"){
-      write.table(x = d, file = "clipboard", quote = F, sep = "\t")
+      write.table(x = d, file = "clipboard", quote = F, sep = "\t", ...)
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(d, file=clip, quote = F, sep = "\t")
+      write.table(d, file=clip, quote = F, sep = "\t", ...)
       close(clip)
     }
   }

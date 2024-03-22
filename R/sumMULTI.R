@@ -5,7 +5,7 @@
 #' @param n1 This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function
 #' @param n2 This is the second line to which you want to get from summary table. If not specified, it is automatically set when taking your function
 #' @param latex whether to export your result in latex form
-#' @param toClip whether to export your result to clipboard. This function is still under construction. Don't change it.
+#' @param toClip whether to export your result to clipboard.
 #' @param pType whether to export your original P, defult to "mark", another option is "value"
 #' @param ... other elements inherited from write.table
 #' @export
@@ -102,11 +102,11 @@ sumMULTI <- function(model,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", ..
 
   if(toClip == T){
     if(.Platform$OS.type == "windows"){
-      write.table(x = res, file = "clipboard", quote = F, sep = "\t")
+      write.table(x = res, file = "clipboard", quote = F, sep = "\t", row.names = F, col.names = F)
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(res, file=clip, quote = F, sep = "\t")
+      write.table(res, file=clip, quote = F, sep = "\t", row.names = F, col.names = F)
       close(clip)
     }
   }

@@ -67,11 +67,11 @@ sumTableOne <- function(tableOne, latex = F, toClip = F, pType = "mark", ...){
     })
     return(res)
   }
-  if(latex = T){
+  if(latex == T){
     res <- tableOne %>%
       makeNamesTableOneLatex(.) %>%
       changeLevelTwoFactor(.)
-  }else if(latex = F){
+  }else if(latex == F){
     res <- tableOne %>%
       makeNamesTableOneExcel(.) %>%
       changeLevelTwoFactor(.)
