@@ -1,11 +1,10 @@
 Package: c218Tools
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Summary the regression table
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Haibo Zhou
+Maintainer: The package maintainer <15077877013@163.com>
+Description: This package tidy the table into academic paper format.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
