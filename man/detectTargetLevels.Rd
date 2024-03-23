@@ -7,7 +7,7 @@
 detectTargetLevels(target, data)
 }
 \arguments{
-\item{target}{your formula}
+\item{target}{your target exposure}
 
 \item{data}{your data}
 }

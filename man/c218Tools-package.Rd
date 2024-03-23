@@ -4,8 +4,8 @@
 \name{c218Tools-package}
 \alias{c218Tools}
 \alias{c218Tools-package}
-\title{c218Tools: What the Package Does (Title Case)}
+\title{c218Tools: Summary the regression table}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+This package tidy the table into academic paper format.
 }
 \keyword{internal}
