@@ -5,6 +5,7 @@
 #' @template paramN1N2P
 #' @template paramLatexToClip
 #' @template paramUnusedDots
+#' @template paramDesc
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/geepack-tidier_demo.R
@@ -14,7 +15,7 @@
 
 
 
-sumReg.geeglm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", desc = F, ...){
+sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL, latex = T,toClip = F,pType = "mark", desc = F, ...){
   target <- all.vars(as.formula(model[["formula"]]))[2]
   data <- model[["data"]]
   # judge n1 and n2
@@ -29,6 +30,7 @@ sumReg.geeglm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mar
     }
     targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
+      n1 <- 1
       n2 <- c218Tools::detectTargetLevels(target = target, data = data)
     }
   }

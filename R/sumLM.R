@@ -104,6 +104,7 @@ sumLM <- function(model,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "mark",
       close(clip)
     }
   }
+  warning("This function is deprecated, use sumReg instead")
   return(res)
 }
 

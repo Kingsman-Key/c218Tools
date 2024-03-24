@@ -5,6 +5,7 @@
 #' @template paramN1N2P
 #' @template paramLatexToClip
 #' @template paramUnusedDots
+#' @template paramDesc
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumGLM_demo.R

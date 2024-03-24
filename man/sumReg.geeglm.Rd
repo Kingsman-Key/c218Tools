@@ -6,8 +6,8 @@
 \usage{
 \method{sumReg}{geeglm}(
   model,
-  n1 = 1,
-  n2 = 2,
+  n1 = NULL,
+  n2 = NULL,
   latex = T,
   toClip = F,
   pType = "mark",
@@ -27,6 +27,8 @@
 \item{toClip}{whether to export your result to clipboard.}
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value"}
+
+\item{desc}{whether to add description of frequencies between outcome and target exposure variable. default to F}
 
 \item{...}{additional arguments passed to write.table function}
 }

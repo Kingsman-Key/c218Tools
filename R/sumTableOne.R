@@ -1,7 +1,7 @@
 #' summary table one from tableone::CreateTableOne function
 #'
 #' Convert results from tableone::CreateTableOne
-#' @param model a linear model object
+#' @param model a tableone object
 #' @param ... other elements inherited from write.table
 #' @export
 #' @example demo/sumLM_demo.R
