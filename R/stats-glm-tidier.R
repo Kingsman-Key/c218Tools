@@ -12,10 +12,12 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.glm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", desc = F, ...){
+sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "mark", desc = F, ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
   outcome <- all.vars(as.formula(model$call[[2]]))[1]
   data <- model[["model"]]
+
+
   # judge n1 and n2
 
   n1n2BothNull <- is.null(n1) & is.null(n2)
@@ -39,8 +41,14 @@ sumReg.glm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark",
   if(n1n2OneNull){
     warning("for arguments n1 and n2, only one element is set, automatically unset them all")
   }
+  outcomeCategory <- c218Tools::detectOutcomeLevels(outcome = outcome, data = data)
+  if(outcomeCategory == "continuous"){
+    exponentiate <- F
+  }else if(outcomeCategory == "categorical") {
+    exponentiate <- T
+  }
   res <- model %>%
-    broom::tidy(x = ., exponentiate = T, conf.int = T) %>%
+    broom::tidy(x = ., exponentiate = exponentiate, conf.int = T) %>%
     dplyr::mutate(
       beta = sprintf("%.2f", estimate),
       up = sprintf("%.2f", conf.high),
@@ -52,12 +60,18 @@ sumReg.glm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark",
       p.value4d = ifelse(sprintf("%.4f",  p.value) == "0.0000", "< 0.0001", sprintf("%.4f",  p.value))
     ) %>%
     dplyr::mutate(
-      # betase = case_when(
-      # p.value < 0.05 & p.value >= 0.01 ~ paste0(betase.s1, "*"),
-      # p.value < 0.01 & p.value >=0.001 ~ paste0(betase.s1, "$"),
-      # p.value < 0.001 ~ paste0(betase.s1, "#"),
-      # TRUE ~ betase.s1
-      # ),
+      betase.mark.latex = case_when(  # generate all the possible results that are needed
+        p.value < 0.05 & p.value >= 0.01 ~ paste0(betase.s1, " ^$\\\\ast$^"),
+        p.value < 0.01 & p.value >=0.001 ~ paste0(betase.s1, " ^$\\\\dag$^"),
+        p.value < 0.001 ~ paste0(betase.s1, " ^$\\\\ddag$^"),
+        TRUE ~ betase.s1
+      ),
+      betase.mark.excel = case_when(
+        p.value < 0.05 & p.value >= 0.01 ~ paste0(betase.s1, "*"),
+        p.value < 0.01 & p.value >=0.001 ~ paste0(betase.s1, "$"),
+        p.value < 0.001 ~ paste0(betase.s1, "#"),
+        TRUE ~ betase.s1
+      ),
       or95.mark.latex = case_when(
         p.value < 0.05 & p.value >= 0.01 ~ paste0(or95.s1, " ^$\\\\ast$^"),
         p.value < 0.01 & p.value >=0.001 ~ paste0(or95.s1, " ^$\\\\dag$^"),
@@ -76,35 +90,69 @@ sumReg.glm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark",
         TRUE ~ pvalue.4dPre
       )
     )
-  if(latex == T & pType == "mark"){ # determine which part should be exported
-    type <- "latexMark"
-  }else if(pType == "value"){
-    type <- "value"
-  }else if(latex == F & pType == "mark"){
-    type <- "excelMark"
+  if(outcomeCategory == "continuous"){
+    res <- res %>%
+      dplyr::select(term, contains("betase"), pvalue.4d)
+
+    if(latex == T & pType == "mark"){ # determine which part should be exported
+      type <- "latexMark"
+    }else if(pType == "value"){
+      type <- "value"
+    }else if(latex == F & pType == "mark"){
+      type <- "excelMark"
+    }
+    index <- which(type %in% c("latexMark", "value", "excelMark"))
+    res <- switch(index, {
+      res %>% #latex mark
+        dplyr::select(term, betase.mark.latex) %>%
+        dplyr::slice(n1:n2)
+    },
+    {
+      res %>% # value
+        dplyr::select(term, betase.s1, pvalue.4d) %>%
+        dplyr::slice(n1:n2)
+    },
+    {
+      res %>% # value
+        dplyr::select(term, betase.mark.excel) %>%
+        dplyr::slice(n1:n2)
+    }
+    )
+  }else if(outcomeCategory == "categorical"){
+    res <- res %>%
+      dplyr::select(term, contains("or95"), pvalue.4d)
+
+    if(latex == T & pType == "mark"){ # determine which part should be exported
+      type <- "latexMark"
+    }else if(pType == "value"){
+      type <- "value"
+    }else if(latex == F & pType == "mark"){
+      type <- "excelMark"
+    }
+    index <- which(type %in% c("latexMark", "value", "excelMark"))
+    res <- switch(index, {
+      res %>% #latex mark
+        dplyr::select(term, or95.mark.latex) %>%
+        dplyr::slice(n1:n2)
+    },
+    {
+      res %>% # value
+        dplyr::select(term, or95.s1, pvalue.4d) %>%
+        dplyr::slice(n1:n2)
+    },
+    {
+      res %>% # value
+        dplyr::select(term, or95.mark.excel) %>%
+        dplyr::slice(n1:n2)
+    }
+    )
   }
-  index <- which(type %in% c("latexMark", "value", "excelMark"))
-  res <- switch(index, {
-    res %>% #latex mark
-      dplyr::select(term, or95.mark.latex) %>%
-      dplyr::slice(n1:n2)
-  },
-  {
-    res %>% # value
-      dplyr::select(term, or95.s1, pvalue.4d) %>%
-      dplyr::slice(n1:n2)
-  },
-  {
-    res %>% # value
-      dplyr::select(term, or95.mark.excel) %>%
-      dplyr::slice(n1:n2)
-  }
-  )
+
   if(n1 == 1){
     res[1,] <- "Ref."
   }
   ## generate description data
-  if(desc == T){
+  if(desc == T & outcomeCategory == "categorical"){
     colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
     freq <- table(data[[target]], data[[outcome]])
     des <- paste0(freq, " (", colPercent, ")") %>%

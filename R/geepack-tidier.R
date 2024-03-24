@@ -16,7 +16,6 @@
 
 sumReg.geeglm <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", desc = F, ...){
   target <- all.vars(as.formula(model[["formula"]]))[2]
-  target <- "Cu"
   data <- model[["data"]]
   # judge n1 and n2
 
