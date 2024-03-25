@@ -2,13 +2,43 @@
 % Please edit documentation in R/sumTableOne.R
 \name{makeNamesTableOneExcel}
 \alias{makeNamesTableOneExcel}
-\title{try to clean names of tableone}
+\title{sum a(n) tableone object}
 \usage{
 makeNamesTableOneExcel(x)
 }
 \arguments{
-\item{x}{An object returned from tableone package}
+\item{x}{a tableone object}
+
+\item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
+
+\item{n2}{This is the second line to which you want to get from summary table. If not specified, it is automatically set when taking your function}
+
+\item{pType}{whether to export your original P, defult to "mark", another option is "value"}
+
+\item{latex}{whether to export your result in latex form}
+
+\item{toClip}{whether to export your result to clipboard.}
+
+\item{...}{additional arguments passed to write.table function}
+}
+\value{
+return a tibble of regression table
 }
 \description{
-try to clean names of tableone
+sumReg summarizes information about the components of a model.
+A model component might be a single term in a regression, a single
+hypothesis, a cluster, or a class. Exactly what tidy considers to be a
+model component varies across models but is usually self-evident.
+If a model has several distinct types of components, you will need to
+specify which components to return.
+}
+\details{
+In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
+}
+\examples{
+
+
+# example code
+model <- lm("Sepal.Length~ Sepal.Width", data = iris)
+regTab <- c218Tools::sumLM(model = model, toClip = TRUE)
 }

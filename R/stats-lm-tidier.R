@@ -12,7 +12,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "mark", ...){
+sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
   data <- model[["model"]]
   # judge n1 and n2
@@ -20,10 +20,10 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "ma
   n1n2BothNull <- is.null(n1) & is.null(n2)
   n1n2OneNull <- (!is.null(n1) & is.null(n2)) | (is.null(n1) & !is.null(n2))
   if(n1n2BothNull|n1n2OneNull){
-    targetIsNumeric <- is.numeric(data[[target]])
-    if(targetIsNumeric){
+    targetIsNumericOrLogical <- is.numeric(data[[target]])|is.logical(data[[target]])
+    if(targetIsNumericOrLogical){
       n1 <- 2
-      n2 <- 2
+      n2 <- c218Tools::detectTargetLevels(target = target, data = data)
     }
     targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
@@ -68,11 +68,11 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "ma
         TRUE ~ pvalue.4dPre
       )
     )
-  if(latex == T & pType == "mark"){ # determine which part should be exported
+  if(latex == TRUE & pType == "mark"){ # determine which part should be exported
     type <- "latexMark"
   }else if(pType == "value"){
     type <- "value"
-  }else if(latex == F & pType == "mark"){
+  }else if(latex == FALSE & pType == "mark"){
     type <- "excelMark"
   }
   index <- which(type %in% c("latexMark", "value", "excelMark"))

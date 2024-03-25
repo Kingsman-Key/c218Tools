@@ -11,7 +11,11 @@ detectTargetLevels <- function(target,data){
     n2 <- length(unique(data[[target]]))
     return(n2)
   }else if(is.factor(data[[target]])){
-    n2 <- levels(data[[target]])
+    n2 <- levels(data[[target]]) %>%
+      length()
+    return(n2)
+  }else if(is.logical(data[[target]])){
+    n2 <- 2
     return(n2)
   }
 }
@@ -34,5 +38,7 @@ detectOutcomeLevels <- function(outcome,data){
   }else if(is.factor(data[[outcome]])){
     outcomeCategory <- "categorical"
     return(outcomeCategory)
+  }else if(is.logical(data[[outcome]])){
+    outcomeCategory <- "categorical"
   }
 }

@@ -32,8 +32,18 @@ sumTableOne <- function(tableOne, latex = F, toClip = F, pType = "mark", ...){
   return(res)
 }
 
-#' try to clean names of tableone
-#' @param x An object returned from tableone package
+#' @templateVar class tableone
+#' @template titleDescSumReg
+#'
+#' @param x a tableone model object
+#' @template paramN1N2P
+#' @template paramLatexToClip
+#' @template paramUnusedDots
+#' @export
+#' @return return a tibble of regression table
+#' @example demo/sumLM_demo.R
+#' @details
+#' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
 makeNamesTableOneLatex <- function(x){ # This is for table one output to latex
@@ -49,8 +59,18 @@ makeNamesTableOneLatex <- function(x){ # This is for table one output to latex
   return(x)
 }
 
-#' try to clean names of tableone
-#' @param x An object returned from tableone package
+#' @templateVar class tableone
+#' @template titleDescSumReg
+#'
+#' @param x a tableone object
+#' @template paramN1N2P
+#' @template paramLatexToClip
+#' @template paramUnusedDots
+#' @export
+#' @return return a tibble of regression table
+#' @example demo/sumLM_demo.R
+#' @details
+#' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
   a <- x[1,] %>%
@@ -65,7 +85,19 @@ makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
   return(x)
 }
 
-## This is previous function created
+
+#' @templateVar class tableone
+#' @template titleDescSumReg
+#'
+#' @param df a tableone object
+#' @template paramN1N2P
+#' @template paramLatexToClip
+#' @template paramUnusedDots
+#' @export
+#' @return return a tibble of regression table
+#' @example demo/sumLM_demo.R
+#' @details
+#' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 changeLevelTwoFactor <- function(df){
   df_con <- df[str_detect(df$Variable, "mean|median"),]
   # rownames(df_con) <- 1:nrow(df_con)

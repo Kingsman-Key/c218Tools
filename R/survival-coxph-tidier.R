@@ -13,7 +13,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType = "mark", desc = F, ...){
+sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, ...){
   target <- all.vars(as.formula(model$formula))[3]
   data <- get(model[["call"]][["data"]])
 
@@ -26,12 +26,12 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType =
     targetIsNumeric <- is.numeric(data[[target]])
     if(targetIsNumeric){
       n1 <- 1
-      n2 <- 2
+      n2 <- 1
     }
     targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
       n1 <- 1
-      n2 <- c218Tools::detectTargetLevels(target = target, data = data)
+      n2 <- c218Tools::detectTargetLevels(target = target, data = data) - 1
     }
   }
   n1n2BothNotNull <- !is.null(n1) & !is.null(n2)
@@ -89,7 +89,7 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType =
     res <- res %>%
       dplyr::select(term, contains("or95"), pvalue.4d)
 
-    if(latex == T & pType == "mark"){ # determine which part should be exported
+    if(latex == TRUE & pType == "mark"){ # determine which part should be exported
       type <- "latexMark"
     }else if(pType == "value"){
       type <- "value"
@@ -118,20 +118,20 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = T,toClip = F,pType =
   #   res[1,] <- "Ref."
   # }
   ## generate description data
-  if(desc == T){
+  if(desc == TRUE){
     colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
     freq <- table(data[[target]], data[[outcome]])
     des <- paste0(freq, " (", colPercent, ")") %>%
       matrix(., nrow = length(table(data[[target]])))
     res <- cbind(res[,1], des, res[,-1])
   }
-  if(toClip == T){
+  if(toClip == TRUE){
     if(.Platform$OS.type == "windows"){
-      write.table(x = res, file = "clipboard", quote = F, sep = "\t", row.names = F, col.names = F)
+      write.table(x = res, file = "clipboard", quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(x = res, file=clip, quote = F, sep = "\t", row.names = F, col.names = F)
+      write.table(x = res, file=clip, quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
       close(clip)
     }
   }

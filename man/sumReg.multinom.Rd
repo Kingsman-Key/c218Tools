@@ -4,7 +4,15 @@
 \alias{sumReg.multinom}
 \title{sum a(n) multinom object}
 \usage{
-\method{sumReg}{multinom}(model, n1 = NULL, n2 = NULL, latex = T, toClip = F, pType = "mark", ...)
+\method{sumReg}{multinom}(
+  model,
+  n1 = NULL,
+  n2 = NULL,
+  latex = TRUE,
+  toClip = FALSE,
+  pType = "mark",
+  ...
+)
 }
 \arguments{
 \item{model}{a multinom model object}

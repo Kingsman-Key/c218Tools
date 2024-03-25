@@ -39,5 +39,6 @@ In academic paper, only one or two lines of regression tables were shown rather 
 # code
 
 model <- lm("Sepal.Length~ Sepal.Width", data = iris)
-regTab <- c218Tools::sumReg(model = model, toClip = T)
+regTab <- c218Tools::sumReg(model = model, toClip = TRUE)
+
 }

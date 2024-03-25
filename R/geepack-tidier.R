@@ -15,8 +15,9 @@
 
 
 
-sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL, latex = T,toClip = F,pType = "mark", desc = F, ...){
+sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, ...){
   target <- all.vars(as.formula(model[["formula"]]))[2]
+  # target <- "Cu"
   data <- model[["data"]]
   # judge n1 and n2
 
@@ -46,12 +47,12 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL, latex = T,toClip = F,pType
   outcome <- all.vars(as.formula(model[["formula"]]))[1]
   outcomeCategory <- c218Tools::detectOutcomeLevels(outcome = outcome, data = data)
   if(outcomeCategory == "continuous"){
-    exponentiate <- F
+    exponentiate <- FALSE
   }else if(outcomeCategory == "categorical") {
-    exponentiate <- T
+    exponentiate <- TRUE
   }
   res <- model %>%
-    broom::tidy(x = ., exponentiate = exponentiate, conf.int = T) %>%
+    broom::tidy(x = ., exponentiate = exponentiate, conf.int = TRUE) %>%
     dplyr::mutate(
       beta = sprintf("%.2f", estimate),
       up = sprintf("%.2f", conf.high),
@@ -99,11 +100,11 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL, latex = T,toClip = F,pType
     res <- res %>%
       dplyr::select(term, contains("betase"), pvalue.4d)
 
-    if(latex == T & pType == "mark"){ # determine which part should be exported
+    if(latex == TRUE & pType == "mark"){ # determine which part should be exported
       type <- "latexMark"
     }else if(pType == "value"){
       type <- "value"
-    }else if(latex == F & pType == "mark"){
+    }else if(latex == FALSE & pType == "mark"){
       type <- "excelMark"
     }
     index <- which(type %in% c("latexMark", "value", "excelMark"))
@@ -127,11 +128,11 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL, latex = T,toClip = F,pType
     res <- res %>%
       dplyr::select(term, contains("or95"), pvalue.4d)
 
-    if(latex == T & pType == "mark"){ # determine which part should be exported
+    if(latex == TRUE & pType == "mark"){ # determine which part should be exported
       type <- "latexMark"
     }else if(pType == "value"){
       type <- "value"
-    }else if(latex == F & pType == "mark"){
+    }else if(latex == FALSE & pType == "mark"){
       type <- "excelMark"
     }
     index <- which(type %in% c("latexMark", "value", "excelMark"))
@@ -157,14 +158,14 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL, latex = T,toClip = F,pType
     res[1,] <- "Ref."
   }
   ## generate description data
-  if(desc == T & outcomeCategory == "categorical"){
+  if(desc == TRUE & outcomeCategory == "categorical"){
     colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
     freq <- table(data[[target]], data[[outcome]])
     des <- paste0(freq, " (", colPercent, ")") %>%
       matrix(., nrow = length(table(data[[target]])))
     res <- cbind(res[,1], des, res[,-1])
   }
-  if(toClip == T){
+  if(toClip == TRUE){
     if(.Platform$OS.type == "windows"){
       write.table(x = res, file = "clipboard", quote = F, sep = "\t", row.names = F, col.names = F)
     }

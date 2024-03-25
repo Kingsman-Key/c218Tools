@@ -4,7 +4,7 @@
 \alias{sbjCnc}
 \title{subject conceive}
 \usage{
-sbjCnc(mesh, st, toClip = FALSE)
+sbjCnc(mesh, st, toClip = FALSE, ...)
 }
 \arguments{
 \item{mesh}{your mesh term}
@@ -12,6 +12,8 @@ sbjCnc(mesh, st, toClip = FALSE)
 \item{st}{subject terms}
 
 \item{toClip}{whether to export your result to clipboard}
+
+\item{...}{additional arguments passed to write.table function}
 }
 \value{
 your subjects to use in pubmed

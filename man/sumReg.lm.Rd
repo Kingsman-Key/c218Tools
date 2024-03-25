@@ -4,7 +4,15 @@
 \alias{sumReg.lm}
 \title{sum a(n) lm object}
 \usage{
-\method{sumReg}{lm}(model, n1 = NULL, n2 = NULL, latex = T, toClip = F, pType = "mark", ...)
+\method{sumReg}{lm}(
+  model,
+  n1 = NULL,
+  n2 = NULL,
+  latex = TRUE,
+  toClip = FALSE,
+  pType = "mark",
+  ...
+)
 }
 \arguments{
 \item{model}{a linear model object}

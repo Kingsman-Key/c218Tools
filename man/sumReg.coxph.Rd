@@ -8,10 +8,10 @@
   model,
   n1 = NULL,
   n2 = NULL,
-  latex = T,
-  toClip = F,
+  latex = TRUE,
+  toClip = FALSE,
   pType = "mark",
-  desc = F,
+  desc = FALSE,
   ...
 )
 }

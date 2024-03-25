@@ -120,6 +120,5 @@ sumGLM <- function(model ,n1 = 1,n2 = 2,latex = T,toClip = F,pType = "mark", des
       close(clip)
     }
   }
-  warning("This function is deprecated, use sumReg instead")
   return(res)
 }
