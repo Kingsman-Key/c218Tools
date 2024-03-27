@@ -13,8 +13,8 @@
 
 
 sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, ...){
-  target <- all.vars(as.formula(model$call[[2]]))[2]
-  outcome <- all.vars(as.formula(model$call[[2]]))[1]
+  target <- all.vars(as.formula(model[["formula"]]))[2]
+  outcome <- all.vars(as.formula(model[["formula"]]))[1]
   data <- model[["model"]]
   # judge n1 and n2
 
@@ -28,6 +28,7 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
     }
     targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
+      n1 <- 1
       n2 <- c218Tools::detectTargetLevels(target = target, data = data)
     }
   }
@@ -39,8 +40,16 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
   if(n1n2OneNull){
     warning("for arguments n1 and n2, only one element is set, automatically unset them all")
   }
+  outcome <- all.vars(as.formula(model[["formula"]]))[1]
+  outcomeCategory <- c218Tools::detectOutcomeLevels(outcome = outcome, data = data)
+  if(outcomeCategory == "continuous"){
+    exponentiate <- FALSE
+  }else if(outcomeCategory == "categorical") {
+    exponentiate <- TRUE
+  }
+
   res <- model %>%
-    broom::tidy(x = ., exponentiate = TRUE, conf.int = TRUE) %>%
+    broom::tidy(x = ., exponentiate = exponentiate, conf.int = TRUE) %>%
     dplyr::mutate(
       beta = sprintf("%.2f", estimate),
       up = sprintf("%.2f", conf.high),

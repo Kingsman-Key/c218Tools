@@ -44,6 +44,8 @@ res <- c218Tools::sumReg(bwt.mu)
 
 
 
+
+
 }
 \seealso{
 [write.table()]

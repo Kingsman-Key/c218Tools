@@ -1,0 +1,5 @@
+sumReg.lm                           R code for summarying stats lm object
+sumReg.glm                          R code for summarying stats glm object
+sumReg.geeglm                       R code for summarying geepack geeglm object
+sumReg.survival                     R code for summarying Hmisc coxph object
+sumReg.multnom                      R code for summarying nnet multinom object

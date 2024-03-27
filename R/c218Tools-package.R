@@ -4,6 +4,7 @@
 ## usethis namespace: start
 #' @importFrom broom tidy
 #' @importFrom dplyr case_when
+#' @importFrom dplyr contains
 #' @importFrom flextable flextable
 #' @importFrom ftExtra colformat_md
 #' @importFrom magrittr %>%

@@ -18,6 +18,7 @@ Imports:
     flextable,
     ftExtra,
     magrittr,
+    MASS,
     nnet,
     speedglm,
     stats,

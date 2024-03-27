@@ -8,18 +8,6 @@ makeNamesTableOneLatex(x)
 }
 \arguments{
 \item{x}{a tableone model object}
-
-\item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
-
-\item{n2}{This is the second line to which you want to get from summary table. If not specified, it is automatically set when taking your function}
-
-\item{pType}{whether to export your original P, defult to "mark", another option is "value"}
-
-\item{latex}{whether to export your result in latex form}
-
-\item{toClip}{whether to export your result to clipboard.}
-
-\item{...}{additional arguments passed to write.table function}
 }
 \value{
 return a tibble of regression table
@@ -41,4 +29,5 @@ In academic paper, only one or two lines of regression tables were shown rather 
 # example code
 model <- lm("Sepal.Length~ Sepal.Width", data = iris)
 regTab <- c218Tools::sumLM(model = model, toClip = TRUE)
+
 }

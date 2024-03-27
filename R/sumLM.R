@@ -27,6 +27,7 @@ sumLM <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = 
     }
     targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
+      n1 <- 1
       n2 <- c218Tools::detectTargetLevels(target = target, data = data)
     }
   }

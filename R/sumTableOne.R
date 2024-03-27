@@ -36,9 +36,6 @@ sumTableOne <- function(tableOne, latex = F, toClip = F, pType = "mark", ...){
 #' @template titleDescSumReg
 #'
 #' @param x a tableone model object
-#' @template paramN1N2P
-#' @template paramLatexToClip
-#' @template paramUnusedDots
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumLM_demo.R
@@ -63,10 +60,6 @@ makeNamesTableOneLatex <- function(x){ # This is for table one output to latex
 #' @template titleDescSumReg
 #'
 #' @param x a tableone object
-#' @template paramN1N2P
-#' @template paramLatexToClip
-#' @template paramUnusedDots
-#' @export
 #' @return return a tibble of regression table
 #' @example demo/sumLM_demo.R
 #' @details
@@ -90,9 +83,6 @@ makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
 #' @template titleDescSumReg
 #'
 #' @param df a tableone object
-#' @template paramN1N2P
-#' @template paramLatexToClip
-#' @template paramUnusedDots
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumLM_demo.R
