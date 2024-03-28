@@ -15,7 +15,7 @@
 
 
 sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, digits = 2, pDigits = 4, ...){
-  target <- all.vars(as.formula(model$formula))[3]
+  target <- all.vars(as.formula(model[["formula"]]))[3]
   data <- get(model[["call"]][["data"]])
 
 

@@ -15,7 +15,7 @@
 
 
 sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, ...){
-  target <- all.vars(as.formula(model$call[[2]]))[2]
+  target <- all.vars(model[["terms"]])[2]  # This function can not promise to get the formula
   data <- model[["model"]]
   # judge n1 and n2
 
