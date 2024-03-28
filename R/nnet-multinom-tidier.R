@@ -6,12 +6,12 @@
 #' @template paramLatexToClip
 #' @template paramUnusedDots
 #' @template paramDigits
-#' @seealso [write.table()] [tidy()]
+#' @seealso [utils::write.table()] [broom::tidy()]
+#' @return @return A [tibble::tibble()] with information about model components.
 #' @export
 #' @example demo/sumMULTI_demo.R
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
-
 
 sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
@@ -52,7 +52,12 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
       or = base::sprintf("%.2f", estimate),
       or95.s1 = paste0(or, " (", low, ", ", up, ")"),
       se = base::sprintf("%.2f", std.error),
-      betase.s1 = paste0(beta, " (", se, ")")
+      betase.s1 = paste0(beta, " (", se, ")"),
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
+      pvalue.4d = case_when(
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits), collapse = ""), "1"),
+        TRUE ~ pvalue.4dPre
+      )
     ) %>%
     dplyr::mutate(
       or95.mark.latex = case_when(
@@ -66,12 +71,8 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
         p.value < 0.01 & p.value >=0.001 ~ paste0(or95.s1, "$"),
         p.value < 0.001 ~ paste0(or95.s1, "#"),
         TRUE ~ or95.s1
-      ),
-      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
-      pvalue.4d = case_when(
-        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits), collapse = ""), "1"),
-        TRUE ~ pvalue.4dPre
       )
+
     )
   if(latex == TRUE & pType == "mark"){ # determine which part should be exported
     type <- "latexMark"
@@ -107,7 +108,7 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(res, file=clip, quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = res, file=clip, quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
       close(clip)
     }
   }

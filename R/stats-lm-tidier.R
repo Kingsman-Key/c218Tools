@@ -29,6 +29,7 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
     }
     targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
+      n1 <- 1
       n2 <- c218Tools::detectTargetLevels(target = target, data = data)
     }
   }
@@ -45,11 +46,11 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
   res <- model %>%
     broom::tidy(., conf.int =T) %>%
     dplyr::mutate(
-      beta = sprintf("%.2f", estimate),
-      up = sprintf("%.2f", conf.high),
-      low = sprintf("%.2f", conf.low),
+      beta = sprintf(digitsToApply, estimate),
+      up = sprintf(digitsToApply, conf.high),
+      low = sprintf(digitsToApply, conf.low),
       # or95 = paste0(or, " (", low, ", ", up, ")"),
-      se = sprintf("%.2f", std.error),
+      se = sprintf(digitsToApply, std.error),
       betase.s1 = paste0(beta, " (", se, ")")
     ) %>%
     dplyr::mutate(

@@ -55,6 +55,11 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
       or95.s1 = paste0(or, " (", low, ", ", up, ")"),
       se = sprintf(digitsToApply, std.error),
       betase.s1 = paste0(beta, " (", se, ")"),
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
+      pvalue.4d = case_when(
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits-1), collapse = ""), "1"),
+        TRUE ~ pvalue.4dPre
+      )
     ) %>%
     dplyr::mutate(
       betase.mark.latex = case_when(  # generate all the possible results that are needed
@@ -80,11 +85,6 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
         p.value < 0.01 & p.value >=0.001 ~ paste0(or95.s1, "$"),
         p.value < 0.001 ~ paste0(or95.s1, "#"),
         TRUE ~ or95.s1
-      ),
-      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
-      pvalue.4d = case_when(
-        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits-1), collapse = ""), "1"),
-        TRUE ~ pvalue.4dPre
       )
     )
 

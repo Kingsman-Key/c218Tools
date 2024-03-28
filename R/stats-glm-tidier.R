@@ -61,7 +61,11 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
       or95.s1 = paste0(or, " (", low, ", ", up, ")"),
       se = sprintf("%.2f", std.error),
       betase.s1 = paste0(beta, " (", se, ")"),
-      p.value4d = ifelse(sprintf("%.4f",  p.value) == "0.0000", "< 0.0001", sprintf("%.4f",  p.value))
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
+      pvalue.4d = case_when(
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits), collapse = ""), "1"),
+        TRUE ~ pvalue.4dPre
+      )
     ) %>%
     dplyr::mutate(
       # betase = case_when(
@@ -81,12 +85,8 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
         p.value < 0.01 & p.value >=0.001 ~ paste0(or95.s1, "$"),
         p.value < 0.001 ~ paste0(or95.s1, "#"),
         TRUE ~ or95.s1
-      ),
-      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
-      pvalue.4d = case_when(
-        pvalue.4dPre == paste0("0.", paste0(rep("0", times = pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", times = pDigits-1), collapse = ""), "1"),
-        TRUE ~ pvalue.4dPre
       )
+
     )
   if(latex == TRUE & pType == "mark"){ # determine which part should be exported
     type <- "latexMark"

@@ -14,6 +14,7 @@
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_replace_all
 #' @importFrom tidyr replace_na
+#' @importFrom utils packageVersion
 #' @importFrom utils write.table
 ## usethis namespace: end
 NULL

@@ -4,20 +4,12 @@
 \alias{sumReg}
 \title{sum a(n) regression object}
 \usage{
-sumReg(
-  model,
-  n1 = NULL,
-  n2 = NULL,
-  pType = "mark",
-  latex = TRUE,
-  toClip = T,
-  digits = 2,
-  pDigits = 4,
-  ...
-)
+sumReg(model, ...)
 }
 \arguments{
 \item{model}{a model object}
+
+\item{...}{additional arguments passed to write.table function}
 
 \item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
 
@@ -32,19 +24,22 @@ sumReg(
 \item{digits}{digits of beta or OR}
 
 \item{pDigits}{digits of P value}
-
-\item{...}{additional arguments passed to write.table function}
 }
 \value{
 return a tibble of regression table
 }
 \description{
 sumReg summarizes information about the components of a model.
-A model component might be a single term in a regression, a single
-hypothesis, a cluster, or a class. Exactly what tidy considers to be a
-model component varies across models but is usually self-evident.
-If a model has several distinct types of components, you will need to
-specify which components to return.
+For technical reasons, changing the variable type directly in the formula is not supported. For example:
+df <- mtcars
+model <- lm("disp ~ as.factor(carb)", data = df)
+res <- c218Tools::sumReg(model = model)
+The above code chunk would cause error for that the package can not detect the target variable levels.
+Rather, Please do it before the model.
+df <- mtcars
+df$carb <- as.factor(df$carb)
+model <- lm("disp~ carb", data = df)
+res <- c218Tools::sumReg(model = model)
 }
 \details{
 In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.

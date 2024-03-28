@@ -27,6 +27,13 @@ r"{
                   %%%%%%%%  ,,,,   , ,   ,   %%%%%%%%
                   %%%%%%%%   ,,    , ,   ,   %%%%%%%%
                   %%%%%%%%  ,,,,  ,    ,     %%%%%%%%
+Professor Yunxian Yu experts in
+Genetic and molecular epidemiology of pregnancy complications
+fetal and infant health.
+Medical big data mining and application research
+Personal profile: https://person.zju.edu.cn/yunxianyu
+Email: yunxianyu@zju.edu.cn
+
 }",
     packageVersion("c218Tools")),
     "\nType 'citation(\"c218Tools\")' for citing this R package in publications.")
