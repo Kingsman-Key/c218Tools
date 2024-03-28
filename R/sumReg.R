@@ -15,6 +15,6 @@
 
 
 
-sumReg <- function(model,n1 = NULL, n2 = NULL, pType = "mark", latex = TRUE, toClip = T, digits = 2, pDigits = 4, ...){
+sumReg <- function(model, ...){
   UseMethod("sumReg")
 }
