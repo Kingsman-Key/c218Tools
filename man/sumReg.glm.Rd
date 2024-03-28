@@ -12,6 +12,8 @@
   toClip = FALSE,
   pType = "mark",
   desc = FALSE,
+  digits = 2,
+  pDigits = 4,
   ...
 )
 }
@@ -27,6 +29,10 @@
 \item{toClip}{whether to export your result to clipboard.}
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value"}
+
+\item{digits}{digits of beta or OR}
+
+\item{pDigits}{digits of P value}
 
 \item{...}{additional arguments passed to write.table function}
 }
@@ -53,4 +59,7 @@ input <- mtcars
 am.data = glm(formula = am ~ cyl + hp + wt, data = input, family = "binomial")
 res <- sumGLM(am.data)
 res <- sumReg(am.data)
+}
+\seealso{
+[write.table()] [tidy()]
 }

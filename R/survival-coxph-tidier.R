@@ -6,6 +6,7 @@
 #' @template paramLatexToClip
 #' @template paramUnusedDots
 #' @template paramDesc
+#' @template paramDigits
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumGLM_demo.R
@@ -13,7 +14,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, ...){
+sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, digits = 2, pDigits = 4, ...){
   target <- all.vars(as.formula(model$formula))[3]
   data <- get(model[["call"]][["data"]])
 
@@ -42,17 +43,18 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
   if(n1n2OneNull){
     warning("for arguments n1 and n2, only one element is set, automatically unset them all")
   }
+  digitsToApply <- paste0("%.", digits, "f")
+  pDigitsToApply <- paste0("%.", pDigits, "f")
   res <- model %>%
     broom::tidy(x = ., exponentiate = T, conf.int = T) %>%
     dplyr::mutate(
-      beta = sprintf("%.2f", estimate),
-      up = sprintf("%.2f", conf.high),
-      low = sprintf("%.2f", conf.low),
-      or = sprintf("%.2f", estimate),
+      beta = sprintf(digitsToApply, estimate),
+      up = sprintf(digitsToApply, conf.high),
+      low = sprintf(digitsToApply, conf.low),
+      or = sprintf(digitsToApply, estimate),
       or95.s1 = paste0(or, " (", low, ", ", up, ")"),
-      se = sprintf("%.2f", std.error),
+      se = sprintf(digitsToApply, std.error),
       betase.s1 = paste0(beta, " (", se, ")"),
-      p.value4d = ifelse(sprintf("%.4f",  p.value) == "0.0000", "< 0.0001", sprintf("%.4f",  p.value))
     ) %>%
     dplyr::mutate(
       betase.mark.latex = case_when(  # generate all the possible results that are needed
@@ -79,9 +81,9 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
         p.value < 0.001 ~ paste0(or95.s1, "#"),
         TRUE ~ or95.s1
       ),
-      pvalue.4dPre = sprintf("%.4f", p.value),
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(
-        pvalue.4dPre == "0.0000" ~ "< 0.0001",
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits-1), collapse = ""), "1"),
         TRUE ~ pvalue.4dPre
       )
     )
@@ -135,6 +137,8 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
       close(clip)
     }
   }
+  res[] <- lapply(res[], as.character)
+  class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
   return(res)
 }
 

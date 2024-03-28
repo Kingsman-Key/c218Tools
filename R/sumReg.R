@@ -5,6 +5,8 @@
 #' @template paramN1N2P
 #' @template paramLatexToClip
 #' @template paramUnusedDots
+#' @template paramDigits
+#' @seealso [func()]
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumReg_demo.R
@@ -13,6 +15,6 @@
 
 
 
-sumReg <- function(model,n1 = NULL, n2 = NULL, pType = "mark", latex = TRUE, toClip = T, ...){
+sumReg <- function(model,n1 = NULL, n2 = NULL, pType = "mark", latex = TRUE, toClip = T, digits = 2, pDigits = 4, ...){
   UseMethod("sumReg")
 }

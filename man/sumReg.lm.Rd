@@ -11,6 +11,8 @@
   latex = TRUE,
   toClip = FALSE,
   pType = "mark",
+  digits = 2,
+  pDigits = 4,
   ...
 )
 }
@@ -26,6 +28,10 @@
 \item{toClip}{whether to export your result to clipboard.}
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value"}
+
+\item{digits}{digits of beta or OR}
+
+\item{pDigits}{digits of P value}
 
 \item{...}{additional arguments passed to write.table function}
 }
@@ -50,4 +56,7 @@ In academic paper, only one or two lines of regression tables were shown rather 
 model <- lm("Sepal.Length~ Sepal.Width", data = iris)
 regTab <- c218Tools::sumLM(model = model, toClip = TRUE)
 
+}
+\seealso{
+[write.table()] [tidy()]
 }

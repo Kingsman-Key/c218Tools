@@ -12,6 +12,8 @@
   toClip = FALSE,
   pType = "mark",
   desc = FALSE,
+  digits = 2,
+  pDigits = 4,
   ...
 )
 }
@@ -29,6 +31,10 @@
 \item{pType}{whether to export your original P, defult to "mark", another option is "value"}
 
 \item{desc}{whether to add description of frequencies between outcome and target exposure variable. default to F}
+
+\item{digits}{digits of beta or OR}
+
+\item{pDigits}{digits of P value}
 
 \item{...}{additional arguments passed to write.table function}
 }
@@ -54,4 +60,7 @@ mf <- formula(Weight ~ Cu * (Time + I(Time^2) + I(Time^3))) \%>\% as.formula
 gee1 <- geepack::geeglm(mf, data=dietox, id=Pig, family=poisson("identity"), corstr="ar1")
 res <- sumReg(gee1)
 
+}
+\seealso{
+[write.table()] [tidy()]
 }

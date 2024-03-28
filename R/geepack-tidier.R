@@ -6,6 +6,8 @@
 #' @template paramLatexToClip
 #' @template paramUnusedDots
 #' @template paramDesc
+#' @template paramDigits
+#' @seealso [write.table()] [tidy()]
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/geepack-tidier_demo.R
@@ -15,7 +17,7 @@
 
 
 
-sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, ...){
+sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, digits = 2, pDigits = 4, ...){
   target <- all.vars(as.formula(model[["formula"]]))[2]
   # target <- "Cu"
   data <- model[["data"]]
@@ -51,6 +53,8 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE
   }else if(outcomeCategory == "categorical") {
     exponentiate <- TRUE
   }
+  digitsToApply <- paste0("%.", digits, "f")
+  pDigitsToApply <- paste0("%.", pDigits, "f")
   res <- model %>%
     broom::tidy(x = ., exponentiate = exponentiate, conf.int = TRUE) %>%
     dplyr::mutate(
@@ -88,9 +92,9 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE
         p.value < 0.001 ~ paste0(or95.s1, "#"),
         TRUE ~ or95.s1
       ),
-      pvalue.4dPre = sprintf("%.4f", p.value),
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(
-        pvalue.4dPre == "0.0000" ~ "< 0.0001",
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits-1), collapse = ""), "1"),
         TRUE ~ pvalue.4dPre
       )
     )
@@ -175,6 +179,8 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE
       close(clip)
     }
   }
+  res[] <- lapply(res[], as.character)
+  class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
   return(res)
 }
 

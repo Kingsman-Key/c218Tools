@@ -5,6 +5,7 @@
 #' @template paramN1N2P
 #' @template paramLatexToClip
 #' @template paramUnusedDots
+#' @template paramDigits
 #' @seealso [write.table()] [tidy()]
 #' @export
 #' @example demo/sumMULTI_demo.R
@@ -12,7 +13,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", ...){
+sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
   outcome <- all.vars(as.formula(model$call[[2]]))[1]
   data <- get(model[["call"]][["data"]])
@@ -41,7 +42,8 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
     warning("for arguments n1 and n2, only one element is set, automatically unset them all")
   }
 
-
+  digitsToApply <- paste0("%.", digits, "f")
+  pDigitsToApply <- paste0("%.", pDigits, "f")
   res <- broom::tidy(x = model, exponentiate = T, conf.int = T) %>%
     dplyr::mutate(
       beta = base::sprintf("%.2f", estimate),
@@ -65,9 +67,9 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
         p.value < 0.001 ~ paste0(or95.s1, "#"),
         TRUE ~ or95.s1
       ),
-      pvalue.4dPre = sprintf("%.4f", p.value),
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(
-        pvalue.4dPre == "0.0000" ~ "< 0.0001",
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits), collapse = ""), "1"),
         TRUE ~ pvalue.4dPre
       )
     )
@@ -109,5 +111,7 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
       close(clip)
     }
   }
+  res[] <- lapply(res[], as.character)
+  class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
   return(res)
 }

@@ -4,12 +4,20 @@
 \alias{sumReg}
 \title{sum a(n) regression object}
 \usage{
-sumReg(model, ...)
+sumReg(
+  model,
+  n1 = NULL,
+  n2 = NULL,
+  pType = "mark",
+  latex = TRUE,
+  toClip = T,
+  digits = 2,
+  pDigits = 4,
+  ...
+)
 }
 \arguments{
 \item{model}{a model object}
-
-\item{...}{additional arguments passed to write.table function}
 
 \item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
 
@@ -20,6 +28,12 @@ sumReg(model, ...)
 \item{latex}{whether to export your result in latex form}
 
 \item{toClip}{whether to export your result to clipboard.}
+
+\item{digits}{digits of beta or OR}
+
+\item{pDigits}{digits of P value}
+
+\item{...}{additional arguments passed to write.table function}
 }
 \value{
 return a tibble of regression table
@@ -41,4 +55,7 @@ In academic paper, only one or two lines of regression tables were shown rather 
 model <- lm("Sepal.Length~ Sepal.Width", data = iris)
 regTab <- c218Tools::sumReg(model = model, toClip = TRUE)
 
+}
+\seealso{
+[func()]
 }

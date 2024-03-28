@@ -5,6 +5,8 @@
 #' @template paramN1N2P
 #' @template paramLatexToClip
 #' @template paramUnusedDots
+#' @template paramDigits
+#' @seealso [write.table()] [tidy()]
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumGLM_demo.R
@@ -12,7 +14,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, ...){
+sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, digits = 2, pDigits = 4, ...){
   target <- all.vars(as.formula(model[["formula"]]))[2]
   outcome <- all.vars(as.formula(model[["formula"]]))[1]
   data <- model[["model"]]
@@ -47,7 +49,8 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
   }else if(outcomeCategory == "categorical") {
     exponentiate <- TRUE
   }
-
+  digitsToApply <- paste0("%.", digits, "f")
+  pDigitsToApply <- paste0("%.", pDigits, "f")
   res <- model %>%
     broom::tidy(x = ., exponentiate = exponentiate, conf.int = TRUE) %>%
     dplyr::mutate(
@@ -79,9 +82,9 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
         p.value < 0.001 ~ paste0(or95.s1, "#"),
         TRUE ~ or95.s1
       ),
-      pvalue.4dPre = sprintf("%.4f", p.value),
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(
-        pvalue.4dPre == "0.0000" ~ "< 0.0001",
+        pvalue.4dPre == paste0("0.", paste0(rep("0", times = pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", times = pDigits-1), collapse = ""), "1"),
         TRUE ~ pvalue.4dPre
       )
     )
@@ -130,5 +133,7 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
       close(clip)
     }
   }
+  res[] <- lapply(res[], as.character)
+  class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
   return(res)
 }

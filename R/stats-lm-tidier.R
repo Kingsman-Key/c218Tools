@@ -5,6 +5,8 @@
 #' @template paramN1N2P
 #' @template paramLatexToClip
 #' @template paramUnusedDots
+#' @template paramDigits
+#' @seealso [write.table()] [tidy()]
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumLM_demo.R
@@ -12,7 +14,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", ...){
+sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, ...){
   target <- all.vars(as.formula(model$call[[2]]))[2]
   data <- model[["model"]]
   # judge n1 and n2
@@ -38,7 +40,8 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
   if(n1n2OneNull){
     warning("for arguments n1 and n2, only one element is set, automatically unset them all")
   }
-
+  digitsToApply <- paste0("%.", digits, "f")
+  pDigitsToApply <- paste0("%.", pDigits, "f")
   res <- model %>%
     broom::tidy(., conf.int =T) %>%
     dplyr::mutate(
@@ -62,9 +65,9 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
         p.value < 0.001 ~ paste0(betase.s1, "#"),
         TRUE ~ betase.s1
       ),
-      pvalue.4dPre = sprintf("%.4f", p.value),
+      pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(
-        pvalue.4dPre == "0.0000" ~ "< 0.0001",
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits-1), collapse = ""), "1"),
         TRUE ~ pvalue.4dPre
       )
     )
@@ -104,6 +107,8 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
       close(clip)
     }
   }
+  res[] <- lapply(res[], as.character)
+  class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
   return(res)
 }
 
