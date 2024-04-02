@@ -51,14 +51,55 @@ detectOutcomeLevels <- function(outcome,data){
 #' @param regList regression list
 #' @export
 
-cbnRegLst <- function(exposureLength, ModelNum, regList){
-  grouped_dfs <- split(regList, rep(1:exposureLength, each = ModelNum))
+cbnRegLst <- function(exposureLength, modelNum, regList){
+  grouped_dfs <- split(regList, rep(1:exposureLength, each = modelNum))
   # cbind grouped result
   cbind_results <- lapply(grouped_dfs, function(df_group) do.call(cbind, df_group))
   # rbind grouped result
   final_result <- do.call(rbind, cbind_results)
   return(final_result)
 }
+
+#' add row before specific index
+#' @param index row index you want to add empty row before
+#' @param df data frame
+#' @export
+#'
+#'
+addEmptyRowsBeforeSpecificIndex <- function(index, df){
+  res <- df
+  i <- 1
+  while(i < NROW(res)){
+    if(i %in% index){
+      res <- rbind(res[1:i-1,],c(""),res[(i):NROW(res),])
+      # res <- rbind(res[1:i+1,],c("",""),res[(i+2):NROW(res),])
+      i <- i+1
+      index <- index + 1
+    }
+    i <- i+1
+  }
+  return(res)
+}
+
+#' add column before specific index
+#' @param index column index you want to add empty row before
+#' @param df data frame
+#' @export
+
+addEmptyColumnsBeforeSpecificIndex <- function(index, df){
+  res <- df
+  i <- 1
+  while (i<NCOL(res)) {
+    if(i  %in% index){
+      res <- cbind(res[,1:i-1], rep("", nrow(res)), res[,i:ncol(res)])
+      i <- i+1
+      index <- index + 1
+    }
+    i <- i+1
+  }
+  return(res)
+}
+
 
 
 

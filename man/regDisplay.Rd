@@ -22,6 +22,8 @@ regDisplay(
 
 \item{data}{your data}
 
+\item{regType}{determine the regression type you want to use, including `lm`,`glm`,`multinom`,`coxph`,`gee`.}
+
 \item{...}{other arguments for according linear model}
 }
 \description{

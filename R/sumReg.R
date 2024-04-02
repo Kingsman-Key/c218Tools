@@ -6,7 +6,7 @@
 #' @template paramLatexToClip
 #' @template paramUnusedDots
 #' @template paramDigits
-#' @seealso [func()]
+#' @seealso [broom::tidy()]
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/sumReg_demo.R
@@ -15,6 +15,6 @@
 
 
 
-sumReg <- function(model, ...){
+sumReg <- function(model, n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, ...){
   UseMethod("sumReg")
 }

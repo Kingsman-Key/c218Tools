@@ -4,14 +4,14 @@
 \alias{cbnRegLst}
 \title{combine the result from regDisplay}
 \usage{
-cbnRegLst(exposureLength, ModelNum, regList)
+cbnRegLst(exposureLength, modelNum, regList)
 }
 \arguments{
 \item{exposureLength}{length of target}
 
-\item{regList}{regression list}
-
 \item{modelNum}{model number}
+
+\item{regList}{regression list}
 }
 \description{
 combine the result from regDisplay

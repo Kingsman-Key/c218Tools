@@ -58,10 +58,10 @@ res <- c218Tools::sumReg(model = model)
 In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 }
 \examples{
-library(tidyverse)
+
 data(package = "geepack", dietox)
 dietox$Cu <- as.factor(dietox$Cu)
-mf <- formula(Weight ~ Cu * (Time + I(Time^2) + I(Time^3))) \%>\% as.formula
+mf <- formula(Weight ~ Cu * (Time + I(Time^2) + I(Time^3)))
 gee1 <- geepack::geeglm(mf, data=dietox, id=Pig, family=poisson("identity"), corstr="ar1")
 res <- sumReg(gee1)
 

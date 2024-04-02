@@ -1,5 +1,10 @@
-sumReg.lm                           R code for summarying stats lm object
-sumReg.glm                          R code for summarying stats glm object
-sumReg.geeglm                       R code for summarying geepack geeglm object
-sumReg.survival                     R code for summarying Hmisc coxph object
-sumReg.multnom                      R code for summarying nnet multinom object
+stats-lm-tidier_demo                R code for summarying stats lm object
+stats-glm-tidier_demo               R code for summarying stats glm object
+geepack-tidier_demo                 R code for summarying geepack geeglm object
+survival-tidier_demo                R code for summarying Hmisc coxph object
+nnet-multinom-tidier_demo           R code for summarying nnet multinom object
+sumReg_demo                         R code for summarying regression
+sumTableOne_demo                    R code for summarying table one from tableone
+formulaGenerator_demo               R code for generating formula list
+regDisplay_demo                     R code for generating regression table set
+sbjCnc_demo                         R code for creating subject terms in pubmed

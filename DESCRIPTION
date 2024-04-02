@@ -17,12 +17,14 @@ Imports:
     dplyr,
     flextable,
     ftExtra,
+    geepack,
     magrittr,
     MASS,
     nnet,
     speedglm,
     stats,
     stringr,
+    survival,
     tidyr,
     utils
 Suggests: 

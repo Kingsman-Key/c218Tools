@@ -60,10 +60,7 @@ In academic paper, only one or two lines of regression tables were shown rather 
 \examples{
 
 
-
-# example code
-input <- mtcars
-am.data = glm(formula = am ~ cyl + hp + wt, data = input, family = "binomial")
-res <- sumGLM(am.data)
-res <- sumReg(am.data)
+data(cancer, package="survival")
+res.cox <- survival::coxph(survival::Surv(time, status) ~ sex, data = lung)
+sumReg(res.cox)
 }

@@ -30,6 +30,8 @@
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to \verb{\\ast}, \verb{\\dag}, \verb{\\ddag}. to replace  $ # respectively.}
 
+\item{desc}{whether adding description frequencies to your regression table}
+
 \item{digits}{digits of beta or OR}
 
 \item{pDigits}{digits of P value}
@@ -57,12 +59,13 @@ In academic paper, only one or two lines of regression tables were shown rather 
 }
 \examples{
 
-
-
-# example code
+# categorical outcome
+model <- glm("Sepal.Length~ Sepal.Width", data = iris)
+res <- sumReg(model)
+# continuous outcome
+data(mtcars)
 input <- mtcars
 am.data = glm(formula = am ~ cyl + hp + wt, data = input, family = "binomial")
-res <- sumGLM(am.data)
 res <- sumReg(am.data)
 }
 \seealso{

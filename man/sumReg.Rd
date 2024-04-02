@@ -4,26 +4,36 @@
 \alias{sumReg}
 \title{sum a(n) regression object}
 \usage{
-sumReg(model, ...)
+sumReg(
+  model,
+  n1 = NULL,
+  n2 = NULL,
+  latex = TRUE,
+  toClip = FALSE,
+  pType = "mark",
+  digits = 2,
+  pDigits = 4,
+  ...
+)
 }
 \arguments{
 \item{model}{a model object}
-
-\item{...}{additional arguments passed to write.table function}
 
 \item{n1}{This is the first line you want to get from your summary table. If not specified, it is automatically set when taking your function}
 
 \item{n2}{This is the second line to which you want to get from summary table. If not specified, it is automatically set when taking your function}
 
-\item{pType}{whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to \verb{\\ast}, \verb{\\dag}, \verb{\\ddag}. to replace  $ # respectively.}
-
 \item{latex}{whether to export your result in latex form.In this package, it was set default to \verb{\\ast}, \verb{\\dag}, \verb{\\ddag}. to replace * $ # respectively. For more information about latex, please refer to https://en.wikibooks.org/wiki/LaTeX/Mathematics}
 
 \item{toClip}{whether to export your result to clipboard. When you are using this package on remote server, This paramater would not work for that linux does not provide access to clipboard when you use ssh to log in.}
 
+\item{pType}{whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to \verb{\\ast}, \verb{\\dag}, \verb{\\ddag}. to replace  $ # respectively.}
+
 \item{digits}{digits of beta or OR}
 
 \item{pDigits}{digits of P value}
+
+\item{...}{additional arguments passed to write.table function}
 }
 \value{
 return a tibble of regression table
@@ -52,5 +62,5 @@ regTab <- c218Tools::sumReg(model = model, toClip = TRUE)
 
 }
 \seealso{
-[func()]
+[broom::tidy()]
 }

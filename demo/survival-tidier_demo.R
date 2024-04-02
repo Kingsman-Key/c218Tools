@@ -1,3 +1,5 @@
-library(survival)
-res.cox <- coxph(Surv(time, status) ~ sex, data = lung)
+
+
+data(cancer, package="survival")
+res.cox <- survival::coxph(survival::Surv(time, status) ~ sex, data = lung)
 sumReg(res.cox)

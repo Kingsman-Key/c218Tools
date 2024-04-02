@@ -4,6 +4,7 @@ utils::globalVariables(
     "or", "low", "up", "se",  "or95.mark.latex", "or95.s1", "or95.mark.excel" ,
     "betase.mark.latex", "betase.s1", "betase.mark.excel",
     "y.level",
-    "outcome", "formula"
+    "outcome", "formula",
+    "modelNum"
     )
 )

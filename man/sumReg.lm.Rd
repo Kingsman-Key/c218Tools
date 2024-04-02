@@ -59,7 +59,7 @@ In academic paper, only one or two lines of regression tables were shown rather 
 
 # example code
 model <- lm("Sepal.Length~ Sepal.Width", data = iris)
-regTab <- c218Tools::sumLM(model = model, toClip = TRUE)
+regTab <- c218Tools::sumReg(model = model, toClip = TRUE)
 
 }
 \seealso{

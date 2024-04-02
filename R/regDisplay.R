@@ -3,6 +3,7 @@
 #' @param exposure your exposure, it could be a vector or a list
 #' @param covariate your covariate, it coule be a list with vectors
 #' @param data your data
+#' @param regType determine the regression type you want to use, including `lm`,`glm`,`multinom`,`coxph`,`gee`.
 #' @param ... other arguments for according linear model
 #' @seealso [geepack::geeglm()][survival::coxph()][stats::lm()][stats::glm()][nnet::multinom()]
 #' @example demo/regDisplay_demo.R
@@ -59,6 +60,6 @@ regDisplay <- function(outcome, exposure, covariate, data, regType = list("lm", 
   })
   exposureLength <- length(exposure)
   modelNum <- length(covariate) + 1
-  resFnl <- cbnRegLst(exposureLength = exposureLength, ModelNum = modelNum, regList = res)
+  resFnl <- cbnRegLst(exposureLength = exposureLength, modelNum = modelNum, regList = res)
   return(resFnl)
 }
