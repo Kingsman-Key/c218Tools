@@ -3,8 +3,8 @@
 #' @param exposure your exposure, it could be a vector or a list
 #' @param covariate your covariate, it coule be a list with vectors
 #' @param data your data
-#' @param ... other arguments for geepack::glm such as id
-#' @seealso [geepack::geeglm()]
+#' @param ... other arguments for according linear model
+#' @seealso [geepack::geeglm()][survival::coxph()][stats::lm()][stats::glm()][nnet::multinom()]
 #' @example demo/regDisplay_demo.R
 #' @export
 
@@ -35,25 +35,25 @@ regDisplay <- function(outcome, exposure, covariate, data, regType = list("lm", 
     outcomeIsLogical <- is.logical(outcomeVector)
 
     if(regType == "lm"){
-      fit <- stats::lm(formula = formula(x), data = data)
+      fit <- stats::lm(formula = formula(x), data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "glm" & outcomeIsNumeric){
-      fit <- stats::glm(formula = formula(x), family = "binomial", data = data)
+      fit <- stats::glm(formula = formula(x), family = "binomial", data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "glm" & (outcomeIs2LevelFactor|outcomeIs2LevelCharacter|outcomeIsLogical)){
-      fit <- stats::glm(formula = formula(x), data = data)
+      fit <- stats::glm(formula = formula(x), data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "multinom"){
-      fit <- nnet::multinom(formula = formula(x), data = data)
+      fit <- nnet::multinom(formula = formula(x), data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "coxph"){
-      fit <- survival::coxph(formula = formula(x), data = data)
+      fit <- survival::coxph(formula = formula(x), data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "gee" & outcomeIsNumeric){
-      fit <- geepack::geeglm(formula = formula(x), data = data, id = id, )
+      fit <- geepack::geeglm(formula = formula(x), data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "gee" & (outcomeIs2LevelFactor|outcomeIs2LevelCharacter|outcomeIsLogical)){
-      fit <- geepack::geeglm(formula = formula(x), data = data, family = "binomial")
+      fit <- geepack::geeglm(formula = formula(x), data = data, family = "binomial", ...)
       res <- sumReg(model = fit)
     }
   })

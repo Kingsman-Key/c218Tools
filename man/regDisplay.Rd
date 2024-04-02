@@ -22,7 +22,7 @@ regDisplay(
 
 \item{data}{your data}
 
-\item{...}{other arguments for geepack::glm}
+\item{...}{other arguments for according linear model}
 }
 \description{
 do regression in batch
@@ -45,5 +45,5 @@ regDisplay(outcome = outcome, exposure = exposure, covariate = covariate, data =
 
 }
 \seealso{
-[geepack::geeglm()]
+[geepack::geeglm()][survival::coxph()][stats::lm()][stats::glm()][nnet::multinom()]
 }

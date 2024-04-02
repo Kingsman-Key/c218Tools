@@ -100,11 +100,11 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
 
   if(toClip == T){
     if(.Platform$OS.type == "windows"){
-      write.table(x = res, file = "clipboard", quote = F, sep = "\t", row.names = F, col.names = F)
+      write.table(x = res, file = "clipboard", quote = F, sep = "\t", ...)
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(res, file=clip, quote = F, sep = "\t", row.names = F, col.names = F)
+      write.table(res, file=clip, quote = F, sep = "\t", ...)
       close(clip)
     }
   }

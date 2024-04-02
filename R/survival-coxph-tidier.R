@@ -129,11 +129,11 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
   }
   if(toClip == TRUE){
     if(.Platform$OS.type == "windows"){
-      write.table(x = res, file = "clipboard", quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = res, file = "clipboard", quote = FALSE, sep = "\t", ...)
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(x = res, file=clip, quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+      write.table(x = res, file=clip, quote = FALSE, sep = "\t", ...)
       close(clip)
     }
   }

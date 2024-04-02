@@ -169,11 +169,11 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE
   }
   if(toClip == TRUE){
     if(.Platform$OS.type == "windows"){
-      write.table(x = res, file = "clipboard", quote = F, sep = "\t", row.names = F, col.names = F)
+      write.table(x = res, file = "clipboard", quote = F, sep = "\t", ...)
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(x = res, file=clip, quote = F, sep = "\t", row.names = F, col.names = F)
+      write.table(x = res, file=clip, quote = F, sep = "\t", ...)
       close(clip)
     }
   }
