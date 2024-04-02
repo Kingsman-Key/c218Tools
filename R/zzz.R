@@ -29,11 +29,11 @@ r"{
                   %%%%%%%%  ,,,,  ,    ,     %%%%%%%%
 Professor Yunxian Yu experts in
 Genetic and molecular epidemiology of pregnancy complications
-fetal and infant health.
+Fetal and infant health.
 Medical big data mining and application research
 Personal profile: https://person.zju.edu.cn/yunxianyu
 Email: yunxianyu@zju.edu.cn
-
+Feel free to contact us if you want to coperate.
 }",
     packageVersion("c218Tools")),
     "\nType 'citation(\"c218Tools\")' for citing this R package in publications.")

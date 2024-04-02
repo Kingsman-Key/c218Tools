@@ -1,7 +1,7 @@
 Package: c218Tools
 Type: Package
 Title: Summary the regression table
-Version: 0.1.1
+Version: 0.1.2
 Author: Haibo Zhou
 Maintainer: The package maintainer <15077877013@163.com>
 Description: This package tidy the table into academic paper format.

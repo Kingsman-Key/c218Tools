@@ -8,7 +8,7 @@ testthat::test_that("basic test on warning", {
   # test on geeglm package
   testthat::expect_warning({
     library(geepack)
-    URL <- "http://static.lib.virginia.edu/statlab/materials/data/depression.csv"
+    URL <- system.file("extdata", "depression.csv", package = "c218Tools")
     dat <- read.csv(URL, stringsAsFactors = TRUE)
     dat$id <- factor(dat$id)
     dat$drug <- relevel(dat$drug, ref = "standard")
@@ -26,7 +26,7 @@ testthat::test_that("basic test on warning", {
 
   testthat::expect_warning({
     library(geepack)
-    URL <- "http://static.lib.virginia.edu/statlab/materials/data/depression.csv"
+    URL <- system.file("extdata", "depression.csv", package = "c218Tools")
     dat <- read.csv(URL, stringsAsFactors = TRUE)
     dat$id <- factor(dat$id)
     dat$drug <- relevel(dat$drug, ref = "standard")
@@ -90,3 +90,30 @@ testthat::test_that("basic test on line number", {
     nrow(res)
   }, expected = length(levels(df$carb)))
 })
+
+testthat::test_that("test on formula object", {
+  ## test on n2 is empty
+
+  # test on geeglm package
+  testthat::expect_no_error({
+    form <- "Sepal.Length~ Sepal.Width"
+    model <- lm(form, data = iris)
+    res <- c218Tools::sumReg(model = model)
+  })
+
+
+})
+
+# stats glm tidier test ------------------------------
+
+testthat::test_that("test on formula object", {
+  testthat::expect_no_error({
+    mydata <- read.csv(system.file("extdata", "binary.csv", package = "c218Tools"))
+    form <- "admit ~ gre + gpa + rank"
+    mydata$rank <- factor(mydata$rank)
+    mylogit <- glm(form, data = mydata, family = "binomial")
+    res <- c218Tools::sumReg(model = mylogit)
+  })
+})
+
+
