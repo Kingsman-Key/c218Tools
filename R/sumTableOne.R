@@ -3,7 +3,7 @@
 #' Convert results from tableone::CreateTableOne
 #' @param tableOne a tableone object
 #' @template paramLatexToClip
-#' @param pType whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to `\ast`, `\dag`, `\ddag`. to replace  $ # respectively.
+#' @param pType whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to `\\ast`, `\\dag`, `\\ddag`. to replace  $ # respectively.
 #' @param ... other elements inherited from write.table
 #' @seealso [utils::write.table()]
 #' @export
@@ -24,11 +24,11 @@ sumTableOne <- function(tableOne, latex = F, toClip = F, pType = "mark", ...){
   }
   if(toClip == T){
     if(.Platform$OS.type == "windows"){
-      write.table(x = res, file = "clipboard", quote = F, sep = "\t")
+      write.table(x = res, file = "clipboard", quote = F, sep = "\t", ...)
     }
     if(.Platform$OS.type == "unix"){
       clip <- pipe("pbcopy", "w")
-      write.table(res, file=clip, quote = F, sep = "\t")
+      write.table(res, file=clip, quote = F, sep = "\t", ...)
       close(clip)
     }
   }

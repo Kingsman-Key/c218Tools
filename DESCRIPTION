@@ -15,18 +15,18 @@ Imports:
     base,
     broom,
     dplyr,
-    flextable,
-    ftExtra,
-    geepack,
     magrittr,
-    MASS,
-    nnet,
-    speedglm,
     stats,
     stringr,
-    survival,
     tidyr,
     utils
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0), 
+    MASS, 
+    nnet, 
+    flextable, 
+    ftExtra, 
+    geepack, 
+    speedglm, 
+    survival
 Config/testthat/edition: 3

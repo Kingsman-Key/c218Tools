@@ -2,10 +2,7 @@
 #' @template titleDescSumReg
 #'
 #' @param model a model object
-#' @template paramN1N2P
-#' @template paramLatexToClip
 #' @template paramUnusedDots
-#' @template paramDigits
 #' @seealso [broom::tidy()]
 #' @export
 #' @return return a tibble of regression table
@@ -15,6 +12,6 @@
 
 
 
-sumReg <- function(model, n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, ...){
-  UseMethod("sumReg")
+sumReg <- function(model, ...){
+  UseMethod("sumReg", model)
 }

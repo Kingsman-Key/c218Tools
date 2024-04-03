@@ -13,7 +13,7 @@ sumTableOne(tableOne, latex = F, toClip = F, pType = "mark", ...)
 
 \item{toClip}{whether to export your result to clipboard. When you are using this package on remote server, This paramater would not work for that linux does not provide access to clipboard when you use ssh to log in.}
 
-\item{pType}{whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to `\ast`, `\dag`, `\ddag`. to replace  $ # respectively.}
+\item{pType}{whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to `\\ast`, `\\dag`, `\\ddag`. to replace  $ # respectively.}
 
 \item{...}{other elements inherited from write.table}
 }
