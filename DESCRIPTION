@@ -16,6 +16,7 @@ Imports:
     broom,
     dplyr,
     magrittr,
+    rms,
     stats,
     stringr,
     tidyr,

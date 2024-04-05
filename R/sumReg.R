@@ -15,3 +15,15 @@
 sumReg <- function(model, ...){
   UseMethod("sumReg", model)
 }
+
+#' @templateVar class regression
+#' @template titleDescRegRcs
+#' @param model a model object
+#' @param ... other arguments that can be passed
+#' @seealso [broom::tidy()]
+#' @export
+#' @return return a tibble of regression table
+
+regRcs <- function(model, ...){
+  UseMethod("regRcs", model)
+}

@@ -5,6 +5,7 @@ utils::globalVariables(
     "betase.mark.latex", "betase.s1", "betase.mark.excel",
     "y.level",
     "outcome", "formula",
-    "modelNum"
+    "modelNum",
+    "yhat", "yhatLead", "yhatLag"
     )
 )
