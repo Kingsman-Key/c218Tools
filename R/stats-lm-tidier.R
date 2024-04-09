@@ -135,7 +135,7 @@ regRcs.lm <- function(model, knots = 5, ...){
   formulaLengthLessThan3 <- length(all.vars(model[["terms"]])) < 3
 
   data <- model[["model"]]
-  dd <<- rms::datadist(data)
+  dd <<- rms::datadist(data) # <<- This function save object in function
   options(datadist='dd')
   rcsPart <- paste0("rms::rcs(", target, ",", knots, ")")
 
