@@ -98,7 +98,7 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
     }else if(latex == F & pType == "mark"){
       type <- "excelMark"
     }
-    index <- which(type %in% c("latexMark", "value", "excelMark"))
+    index <- which(type == c("latexMark", "value", "excelMark"))
     res <- switch(index, {
       res %>% #latex mark
         dplyr::select(term, or95.mark.latex) %>%

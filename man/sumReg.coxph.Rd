@@ -63,4 +63,6 @@ In academic paper, only one or two lines of regression tables were shown rather 
 data(cancer, package="survival")
 res.cox <- survival::coxph(survival::Surv(time, status) ~ sex, data = lung)
 sumReg(res.cox)
+
+
 }

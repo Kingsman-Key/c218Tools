@@ -13,7 +13,7 @@
 
 
 sumReg <- function(model, ...){
-  UseMethod("sumReg", model)
+  UseMethod("sumReg")
 }
 
 #' @templateVar class regression
@@ -25,5 +25,5 @@ sumReg <- function(model, ...){
 #' @return return a tibble of regression table
 
 regRcs <- function(model, ...){
-  UseMethod("regRcs", model)
+  UseMethod("regRcs")
 }

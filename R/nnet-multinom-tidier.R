@@ -81,7 +81,7 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
   }else if(latex == F & pType == "mark"){
     type <- "excelMark"
   }
-  index <- which(type %in% c("latexMark", "value", "excelMark"))
+  index <- which(type == c("latexMark", "value", "excelMark"))
   res <- switch(index, {
     res %>% #latex mark
       dplyr::select(y.level, term, or95.mark.latex)

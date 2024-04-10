@@ -2,7 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom base <<-
 #' @importFrom broom tidy
 #' @importFrom dplyr case_when
 #' @importFrom dplyr contains
