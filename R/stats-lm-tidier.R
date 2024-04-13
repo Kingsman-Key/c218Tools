@@ -161,16 +161,23 @@ regRcs.lm <- function(model, knots = 5, ...){
   maximumY <- df %>%
     dplyr::filter(yhat - yhatLead >0 & yhat - yhatLag > 0) %>%
     pull(yhat)
-  maximumX <- df %>%
-    dplyr::filter(yhat == maximumY) %>%
-    pull(1)
+  if(length(maximumY) > 0){
+    maximumX <- df %>%
+      dplyr::filter(yhat == maximumY) %>%
+      pull(1)
+  }else{
+    maximumX <- NULL
+  }
   minimumY <- df %>%
     dplyr::filter(yhat - yhatLead >0 & yhat - yhatLag > 0) %>%
     pull(yhat)
-  minimumX <- df %>%
-    dplyr::filter(yhat == minimumY) %>%
-    pull(1)
-
+  if(length(maximumY) > 0){
+    minimumX <- df %>%
+      dplyr::filter(yhat == minimumY) %>%
+      pull(1)
+  }else{
+    minimumX <- NULL
+  }
   resList <- list(fitPred = fitPred, pNonLinear = p_nonlinear, minimumX = minimumX, maximumX = maximumX)
   return(resList)
 }

@@ -138,3 +138,80 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
   class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
   return(res)
 }
+
+
+
+#' draw RCS
+#' @param model your logistic model
+#' @param knots the numerb of knots you want to use, default is 5
+#' @param ... Other arguments of rms::ols function
+#' @seealso [rms::ols()]
+#' @example demo/stats-lm-rcs_demo.R
+#' @returns a list of objects you might need in RCS plot
+
+#' \item{fitPred}{This is the dataframe you need when plotting RCS}
+#' \item{pNonLinear}{This is the P for nonlinear}
+#' \item{minimumX}{This is the X of minimum. It is usually used in inflection point detection.}
+#' \item{maximumX}{This is the X of maximum. It is usually used in inflection point detection.}
+#' @export
+
+
+
+regRcs.glm <- function(model, knots = 5, ...){
+  target <- all.vars(model[["terms"]])[2]  # This function can not promise to get the formula
+  outcome <- all.vars(model[["terms"]])[1]
+  formulaLengthLessThan3 <- length(all.vars(model[["terms"]])) < 3
+
+  data <- model[["model"]]
+  dd <<- rms::datadist(data) # <<- This function save object in function
+  options(datadist='dd')
+  rcsPart <- paste0("rms::rcs(", target, ",", knots, ")")
+
+  if(formulaLengthLessThan3){
+    covariate <- NULL
+    form <- paste0(outcome, "~", rcsPart)
+
+  }else{
+    covariate <- all.vars(model[["terms"]])[3:length(all.vars(model[["terms"]]))]
+    form <- paste0(outcome, "~", rcsPart, "+", paste0(covariate, collapse = "+"))
+  }
+
+  fit <- rms::lrm(formula = formula(form), data = data, ...)
+  a <- stats::anova(fit) %>%
+    as.data.frame()
+  p_nonlinear <- ifelse(a$P[[2]]==0,"<0.0001", round(a$P[[2]], 4))
+  fitPred <- rms::Predict(fit, name = target)
+  df <- data.frame(
+    yhat = fitPred[["yhat"]],
+    yhatLead = dplyr::lead(fitPred[["yhat"]]),
+    yhatLag = dplyr::lag(fitPred[["yhat"]])
+  )
+  maximumY <- df %>%
+    dplyr::filter(yhat - yhatLead >0 & yhat - yhatLag > 0) %>%
+    pull(yhat)
+  if(length(maximumY) > 0){
+    maximumX <- df %>%
+      dplyr::filter(yhat == maximumY) %>%
+      pull(1)
+  }else{
+    maximumX <- NULL
+  }
+  minimumY <- df %>%
+    dplyr::filter(yhat - yhatLead >0 & yhat - yhatLag > 0) %>%
+    pull(yhat)
+  if(length(maximumY) > 0){
+    minimumX <- df %>%
+      dplyr::filter(yhat == minimumY) %>%
+      pull(1)
+  }else{
+    minimumX <- NULL
+  }
+  resList <- list(fitPred = fitPred, pNonLinear = p_nonlinear, minimumX = minimumX, maximumX = maximumX)
+  return(resList)
+}
+
+
+
+
+
+
