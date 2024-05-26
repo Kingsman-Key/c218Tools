@@ -27,3 +27,19 @@ sumReg <- function(model, ...){
 regRcs <- function(model, ...){
   UseMethod("regRcs")
 }
+
+
+#' print result
+#'
+#' @param x sumreg object
+#' @export
+print.sumReg <- function(x){
+  write.table(x, file = "stdout", row.names = FALSE)
+  # cat("Summary of regression table:\n")
+  # 输出列表的部分摘要信息，如前几个元素或特定元素
+  # cat(x[["regressionTable"]], "\n")
+  invisible(x)
+
+  return(x[["regressionTable"]])
+}
+

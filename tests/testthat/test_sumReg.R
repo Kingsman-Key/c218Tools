@@ -45,6 +45,7 @@ testthat::test_that("basic test on warning", {
 })
 
 
+
 # stats lm tidier test ------------------------
 
 
@@ -115,5 +116,17 @@ testthat::test_that("test on formula object", {
     res <- c218Tools::sumReg(model = mylogit)
   })
 })
+
+
+
+
+
+# survival tidier test ----------------------------------------------------
+
+
+
+
+
+
 
 

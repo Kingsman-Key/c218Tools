@@ -6,6 +6,9 @@ utils::globalVariables(
     "y.level",
     "outcome", "formula",
     "modelNum",
-    "yhat", "yhatLead", "yhatLag"
+    "yhat", "yhatLead", "yhatLag",
+    "outcomeCategory",
+    "tableName",
+    "des"
     )
 )

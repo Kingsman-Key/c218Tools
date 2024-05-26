@@ -11,9 +11,9 @@
   latex = TRUE,
   toClip = FALSE,
   pType = "mark",
-  desc = FALSE,
   digits = 2,
   pDigits = 4,
+  regressionTableOnly = T,
   ...
 )
 }
@@ -30,13 +30,15 @@
 
 \item{pType}{whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to \verb{\\ast}, \verb{\\dag}, \verb{\\ddag}. to replace  $ # respectively.}
 
-\item{desc}{whether to add description of frequencies between outcome and target exposure variable. default to F}
-
 \item{digits}{digits of beta or OR}
 
 \item{pDigits}{digits of P value}
 
+\item{regressionTableOnly}{Whether to return regression table only. if set to FALSE. other a list would be returned with model type .etc displayed}
+
 \item{...}{additional arguments passed to write.table function}
+
+\item{desc}{whether to add description of frequencies between outcome and target exposure variable. default to F}
 }
 \value{
 return a tibble of regression table

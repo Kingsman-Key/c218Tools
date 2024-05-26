@@ -13,6 +13,7 @@
   pType = "mark",
   digits = 2,
   pDigits = 4,
+  regressionTableOnly = T,
   ...
 )
 }

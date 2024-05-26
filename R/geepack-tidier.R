@@ -7,6 +7,7 @@
 #' @template paramUnusedDots
 #' @template paramDesc
 #' @template paramDigits
+#' @template paramAdjustOutcome
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/geepack-tidier_demo.R
@@ -16,7 +17,7 @@
 
 
 
-sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, digits = 2 ,pDigits = 4, ...){
+sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2 ,pDigits = 4, regressionTableOnly = T, ...){
   target <- all.vars(as.formula(model[["formula"]]))[2]
   # target <- "Cu"
   data <- model[["data"]]
@@ -160,12 +161,14 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE
     res[1,] <- "Ref."
   }
   ## generate description data
-  if(desc == TRUE & outcomeCategory == "categorical"){
+  if(outcomeCategory == "categorical" & targetIsCharacterOrFactor){
     colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
     freq <- table(data[[target]], data[[outcome]])
     des <- paste0(freq, " (", colPercent, ")") %>%
       matrix(., nrow = length(table(data[[target]])))
-    res <- cbind(res[,1], des, res[,-1])
+    # res <- cbind(res[,1], des, res[,-1])
+  }else{
+    des <- NULL
   }
   if(toClip == TRUE){
     if(.Platform$OS.type == "windows"){
@@ -177,7 +180,16 @@ sumReg.geeglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE
       close(clip)
     }
   }
-  return(res)
+  res[] <- lapply(res[], as.character)
+  tableName <- names(res)
+
+  if(regressionTableOnly == T){
+    return(res)
+  }else if(regressionTableOnly == F){
+    resList <- list(regressionTable = res, model = "geeglm", outcomeCategory = outcomeCategory, tableName = tableName)
+    class(resList) <- "sumReg"
+    return(resList)
+  }
 }
 
 

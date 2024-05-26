@@ -7,6 +7,7 @@
 #' @template paramUnusedDots
 #' @template paramDesc
 #' @template paramDigits
+#' @template paramAdjustOutcome
 #' @export
 #' @return return a tibble of regression table
 #' @example demo/survival-tidier_demo.R
@@ -14,7 +15,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", desc = FALSE, digits = 2, pDigits = 4, ...){
+sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, regressionTableOnly = T, ...){
   target <- all.vars(as.formula(model[["formula"]]))[3]
   data <- get(model[["call"]][["data"]])
 
@@ -120,13 +121,16 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
   #   res[1,] <- "Ref."
   # }
   ## generate description data
-  if(desc == TRUE){
-    colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
-    freq <- table(data[[target]], data[[outcome]])
-    des <- paste0(freq, " (", colPercent, ")") %>%
-      matrix(., nrow = length(table(data[[target]])))
-    res <- cbind(res[,1], des, res[,-1])
-  }
+    outcomeCategory <- "categorical"
+    if(outcomeCategory == "categorical" & targetIsCharacterOrFactor){
+      colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
+      freq <- table(data[[target]], data[[outcome]])
+      des <- paste0(freq, " (", colPercent, ")") %>%
+        matrix(., nrow = length(table(data[[target]])))
+      # res <- cbind(res[,1], des, res[,-1])
+    }else{
+      des <- NULL
+    }
   if(toClip == TRUE){
     if(.Platform$OS.type == "windows"){
       write.table(x = res, file = "clipboard", quote = FALSE, sep = "\t", ...)
@@ -138,7 +142,13 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
     }
   }
   res[] <- lapply(res[], as.character)
-  class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
-  return(res)
+  tableName <- names(res)
+  if(regressionTableOnly == T){
+    return(res)
+  }else if(regressionTableOnly == F){
+    resList <- list(regressionTable = res, model = "glm", outcomeCategory = outcomeCategory, tableName = tableName, descriptionStatistics = des)
+    class(resList) <- "sumReg"
+    return(resList)
+  }
 }
 

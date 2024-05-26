@@ -6,6 +6,7 @@
 #' @template paramLatexToClip
 #' @template paramUnusedDots
 #' @template paramDigits
+#' @template paramAdjustOutcome
 #' @seealso [utils::write.table()] [broom::tidy()]
 #' @return @return A [tibble::tibble()] with information about model components.
 #' @export
@@ -13,7 +14,7 @@
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
-sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, ...){
+sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, regressionTableOnly = T, ...){
   target <- all.vars(model[["terms"]])[2]
   outcome <- all.vars(model[["terms"]])[1]
   data <- get(model[["call"]][["data"]])
@@ -55,7 +56,7 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
       betase.s1 = paste0(beta, " (", se, ")"),
       pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(
-        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits), collapse = ""), "1"),
+        pvalue.4dPre == paste0("0.", paste0(rep("0", pDigits), collapse = "")) ~ paste0("< 0.", paste0(rep("0", pDigits-1), collapse = ""), "1"),
         TRUE ~ pvalue.4dPre
       )
     ) %>%
@@ -112,7 +113,20 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
       close(clip)
     }
   }
+
+  colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
+  freq <- table(data[[target]], data[[outcome]])
+  des <- paste0(freq, " (", colPercent, ")") %>%
+    matrix(., nrow = length(table(data[[target]])))
+
   res[] <- lapply(res[], as.character)
-  class(res) <- c("tbl_df", "tbl", "data.frame", "sumReg")
-  return(res)
+  tableName <- names(res)
+
+  if(regressionTableOnly){
+    return(res)
+  }else if(!regressionTableOnly){
+    resList <- list(regressionTable = res, model = "multinom", descriptionStatistics = des, tableName = tableName)
+    class(resList) <- "sumReg"
+    return(resList)
+  }
 }
