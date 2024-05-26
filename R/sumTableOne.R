@@ -92,18 +92,17 @@ makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 changeLevelTwoFactor <- function(df){
-  df_con <- df[str_detect(df$Variable, "mean|median"),]
-  if(str_detect(df$Variable, "mean")){
-    df_con[] <- lapply(df_con[], function(x){
-      x <- str_replace(string = x, pattern = "\\(", replacement = "± ")
-      x <- str_replace(string = x, pattern = "\\)", replacement = "")
-      return(x)
-    })
-  }
+  df_con <- df[stringr::str_detect(df$Variable, "mean|median"),]
+  df_con[] <- lapply(df_con[], function(x){
+    x <- stringr::str_replace(string = x, pattern = "\\(", replacement = "± ")
+    x <- stringr::str_replace(string = x, pattern = "\\)", replacement = "")
+    return(x)
+  })
+
   # rownames(df_con) <- 1:nrow(df_con)
-  df_cat <- df[!str_detect(df$Variable, "mean|median"),]
+  df_cat <- df[!stringr::str_detect(df$Variable, "mean|median"),]
   # rownames(df_cat) <- 1:nrow(df_cat)
-  index <- which(str_detect(df_cat$Variable, "\\%"))
+  index <- which(stringr::str_detect(df_cat$Variable, "\\%"))
   res1 <- addEmptyRowsBeforeSpecificIndex(index = index, df = df_cat)
   res1$Variable <- c(res1$Variable[-1], "")
   emptyStringIndex <- grep(pattern = "^$", x = res1$Variable)
