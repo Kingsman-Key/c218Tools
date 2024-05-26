@@ -39,10 +39,10 @@ regDisplay <- function(outcome, exposure, covariate, data, regType = list("lm", 
       fit <- stats::lm(formula = formula(x), data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "glm" & outcomeIsNumeric){
-      fit <- stats::glm(formula = formula(x), family = "binomial", data = data, ...)
+      fit <- stats::glm(formula = formula(x), data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "glm" & (outcomeIs2LevelFactor|outcomeIs2LevelCharacter|outcomeIsLogical)){
-      fit <- stats::glm(formula = formula(x), data = data, ...)
+      fit <- stats::glm(formula = formula(x), family = "binomial", data = data, ...)
       res <- sumReg(model = fit)
     }else if(regType == "multinom"){
       fit <- nnet::multinom(formula = formula(x), data = data, ...)

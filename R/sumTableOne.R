@@ -71,7 +71,7 @@ makeNamesTableOneLatex <- function(x){ # This is for table one output to latex
 
 makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
   a <- x[1,] %>%
-    str_replace_all(pattern = " ", replacement  = "")
+    stringr::str_replace_all(pattern = " ", replacement  = "")
   a[which(a != "")] <- paste0("(n = ", a[which(a != "")], ")")
   # x <- rbind(paste0(colnames(x), a), x)
   colnames(x) <- paste0(colnames(x), a)
@@ -93,7 +93,7 @@ makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 changeLevelTwoFactor <- function(df){
   df_con <- df[stringr::str_detect(df$Variable, "mean|median"),]
-  df_con[] <- lapply(df_con[], function(x){
+  df_con[stringr::str_detect(df$Variable, "mean"),] <- lapply(df_con[stringr::str_detect(df$Variable, "mean"),], function(x){
     x <- stringr::str_replace(string = x, pattern = "\\(", replacement = "± ")
     x <- stringr::str_replace(string = x, pattern = "\\)", replacement = "")
     return(x)

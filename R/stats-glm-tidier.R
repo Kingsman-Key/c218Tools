@@ -51,7 +51,7 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
   outcomeCategory <- c218Tools::detectOutcomeLevels(outcome = outcome, data = data)
   if(outcomeCategory == "continuous"){
     exponentiate <- FALSE
-  }else if(outcomeCategory == "categorical") {
+  }else if(outcomeCategory == "categorical"){
     exponentiate <- TRUE
   }
   digitsToApply <- paste0("%.", digits, "f")
