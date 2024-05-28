@@ -40,6 +40,10 @@
 }
 \value{
 return a tibble of regression table
+\item{regressionTable}{regression table}
+\item{outcomeCategory}{the category of outcome}
+\item{tableName}{regression table name}
+\item{descriptionStatistics}{Joint frequency distribution of exposure and outcome}
 }
 \description{
 sumReg summarizes information about the components of a model.

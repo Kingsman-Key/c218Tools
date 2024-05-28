@@ -13,6 +13,7 @@
   pType = "mark",
   digits = 2,
   pDigits = 4,
+  regressionTableOnly = T,
   ...
 )
 }
@@ -32,6 +33,8 @@
 \item{digits}{digits of beta or OR}
 
 \item{pDigits}{digits of P value}
+
+\item{regressionTableOnly}{Whether to return regression table only. if set to FALSE. other a list would be returned with model type .etc displayed}
 
 \item{...}{additional arguments passed to write.table function}
 

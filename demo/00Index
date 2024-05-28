@@ -10,3 +10,4 @@ regDisplay_demo                     R code for generating regression table set
 sbjCnc_demo                         R code for creating subject terms in pubmed
 stats-lm-rcs_demo                   R code for creating dataframe for lm RCS
 stats-glm-rcs_demo                  R code for creating dataframe for glm RCS
+mediation-mediate_demo              R code for generating dataframe for mediate object
