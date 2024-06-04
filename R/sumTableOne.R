@@ -1,16 +1,14 @@
 #' summary table one from tableone::CreateTableOne function
-#'
-#' Convert results from tableone::CreateTableOne
 #' @param tableOne a tableone object
 #' @template paramLatexToClip
-#' @param pType whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to `\\ast`, `\\dag`, `\\ddag`. to replace  $ # respectively.
 #' @param ... other elements inherited from write.table
 #' @seealso [utils::write.table()]
 #' @export
 #' @example demo/sumTableOne_demo.R
 #' @details
-#' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
-sumTableOne <- function(tableOne, latex = F, toClip = F, pType = "mark", ...){
+#' When using this function. Remember to use `showAllLevels = T` in the print function from tableone package. Also, make sure you have at least one continuous variable and one categoriacal variable to make the function run.
+
+sumTableOne <- function(tableOne, toClip = F, latex = F, ...){
   # clean the table header
 
   if(latex == T){
@@ -86,18 +84,26 @@ makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
 #' @templateVar class tableone
 #' @template titleDescSumReg
 #' @param df a tableone object
+#' @param outcomeLevel level of outcome if it were categorical
 #' @return return a tibble of regression table
 #' @example demo/sumTableOne_demo.R
 #' @export
 #' @details
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
-changeLevelTwoFactor <- function(df){
+changeLevelTwoFactor <- function(df, outcomeLevel = NULL){
   df_con <- df[stringr::str_detect(df$Variable, "mean|median"),]
-  df_con[stringr::str_detect(df$Variable, "mean"),2:ncol(df_con)] <- lapply(df_con[stringr::str_detect(df$Variable, "mean"),2:ncol(df_con)], function(x){
+  df_con[,2:ncol(df_con)] <- lapply(df_con[,2:ncol(df_con)], function(x){
     x <- ifelse(!stringr::str_detect(x, "\\,"), stringr::str_replace(string = x, pattern = "\\(", replacement = "± "), x)
-    x <- ifelse(!stringr::str_detect(x, "\\,"),stringr::str_replace(string = x, pattern = "\\)", replacement = ""), x)
+    x <- ifelse(!stringr::str_detect(x, "\\,"), stringr::str_replace(string = x, pattern = "\\)", replacement = ""), x)
     return(x)
   })
+  if(!is.null(outcomeLevel)){
+    df_con[,2:outcomeLevel+1] <- lapply(df_con[,2:outcomeLevel+1], function(x){
+      x <- ifelse(!stringr::str_detect(x, "\\,"), stringr::str_replace(string = x, pattern = "\\(", replacement = "± "), x)
+      x <- ifelse(!stringr::str_detect(x, "\\,"), stringr::str_replace(string = x, pattern = "\\)", replacement = ""), x)
+      return(x)
+    })
+  }
   # df_con[stringr::str_detect(df$Variable, "median"),2:ncol(df_con)] <- lapply(df_con[stringr::str_detect(df$Variable, "median"),2:ncol(df_con)], function(x){
   #   x <- stringr::str_replace(string = x, pattern = "\\[", replacement = "(")
   #   x <- stringr::str_replace(string = x, pattern = "\\]", replacement = ")")

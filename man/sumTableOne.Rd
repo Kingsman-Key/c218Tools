@@ -4,27 +4,38 @@
 \alias{sumTableOne}
 \title{summary table one from tableone::CreateTableOne function}
 \usage{
-sumTableOne(tableOne, latex = F, toClip = F, pType = "mark", ...)
+sumTableOne(tableOne, toClip = F, latex = F, ...)
 }
 \arguments{
 \item{tableOne}{a tableone object}
 
-\item{latex}{whether to export your result in latex form.In this package, it was set default to \verb{\\ast}, \verb{\\dag}, \verb{\\ddag}. to replace * $ # respectively. For more information about latex, please refer to https://en.wikibooks.org/wiki/LaTeX/Mathematics}
-
 \item{toClip}{whether to export your result to clipboard. When you are using this package on remote server, This paramater would not work for that linux does not provide access to clipboard when you use ssh to log in.}
 
-\item{pType}{whether to export your original P, defult to "mark", another option is "value". When mark was selected. * stands for P < 0.05; $ stands for P < 0.01 # stands for P < 0.001. it was set default to `\\ast`, `\\dag`, `\\ddag`. to replace  $ # respectively.}
+\item{latex}{whether to export your result in latex form.In this package, it was set default to \verb{\\ast}, \verb{\\dag}, \verb{\\ddag}. to replace * $ # respectively. For more information about latex, please refer to https://en.wikibooks.org/wiki/LaTeX/Mathematics}
 
 \item{...}{other elements inherited from write.table}
 }
 \description{
-Convert results from tableone::CreateTableOne
+summary table one from tableone::CreateTableOne function
 }
 \details{
-In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
+When using this function. Remember to use `showAllLevels = T` in the print function from tableone package. Also, make sure you have at least one continuous variable and one categoriacal variable to make the function run.
 }
 \examples{
 # example code
+
+df <- iris \%>\%
+  dplyr::mutate(
+    Petal.Length.2f = case_when(
+      Petal.Length < 2 ~ "small",
+      Petal.Length >= 2 ~ "large",
+      TRUE ~ NA_character_
+    )
+  )
+table1 <- tableone::CreateTableOne(vars = c("Sepal.Length", "Sepal.Width", "Petal.Length.2f"), strata = "Species", data = iris) \%>\%
+  print(showAllLevels = T)
+
+res <- c218Tools::sumTableOne(table1)
 }
 \seealso{
 [utils::write.table()]
