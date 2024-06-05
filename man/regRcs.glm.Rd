@@ -4,14 +4,18 @@
 \alias{regRcs.glm}
 \title{draw RCS}
 \usage{
-\method{regRcs}{glm}(model, knots = 5, ...)
+\method{regRcs}{glm}(model, knots = 5, ref.zero = T, fun = exp)
 }
 \arguments{
 \item{model}{your logistic model}
 
 \item{knots}{the numerb of knots you want to use, default is 5}
 
-\item{...}{Other arguments of rms::ols function}
+\item{ref.zero}{whether you want to set the reference point to 0, default is TRUE}
+
+\item{fun}{whether you want to use fun in Predict function, default is NULL}
+
+\item{...}{Other arguments of rms::Predict function}
 }
 \value{
 a list of objects you might need in RCS plot
@@ -31,5 +35,5 @@ c218Tools::regRcs(model = model, knots = 5)
 
 }
 \seealso{
-[rms::ols()]
+[rms::lrm()]
 }

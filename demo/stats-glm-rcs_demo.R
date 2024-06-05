@@ -4,7 +4,7 @@ data(mtcars)
 input <- mtcars
 am.data = glm(formula = am ~ mpg + hp + wt, data = input, family = "binomial")
 
-regRcs(am.data)
+regRcs(am.data, ref.zero = T, fun = exp)
 res <- sumReg(am.data)
 model <- am.data
 knots <- 5
