@@ -84,7 +84,7 @@ makeNamesTableOneExcel <- function(x){ # This is for table one output to excel
 #' @templateVar class tableone
 #' @template titleDescSumReg
 #' @param df a tableone object
-#' @param outcomeLevel level of outcome if it were categorical
+#' @param outcomeLevel level of outcome if it were categorical.It should be numerical
 #' @return return a tibble of regression table
 #' @example demo/sumTableOne_demo.R
 #' @export

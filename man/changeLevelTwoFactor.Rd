@@ -9,7 +9,7 @@ changeLevelTwoFactor(df, outcomeLevel = NULL)
 \arguments{
 \item{df}{a tableone object}
 
-\item{outcomeLevel}{level of outcome if it were categorical}
+\item{outcomeLevel}{level of outcome if it were categorical.It should be numerical}
 }
 \value{
 return a tibble of regression table
