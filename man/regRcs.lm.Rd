@@ -11,7 +11,7 @@
 
 \item{knots}{the numerb of knots you want to use, default is 5}
 
-\item{...}{Other arguments of rms::ols function}
+\item{...}{Other arguments of rms::Predict function}
 }
 \value{
 a list of objects you might need in RCS plot
@@ -31,5 +31,5 @@ c218Tools::regRcs(model = model, knots = 5)
 
 }
 \seealso{
-[rms::ols()]
+[rms::Predict()]
 }

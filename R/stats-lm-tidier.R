@@ -124,8 +124,8 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
 #' draw RCS
 #' @param model your model
 #' @param knots the numerb of knots you want to use, default is 5
-#' @param ... Other arguments of rms::ols function
-#' @seealso [rms::ols()]
+#' @param ... Other arguments of rms::Predict function
+#' @seealso [rms::Predict()]
 #' @example demo/stats-lm-rcs_demo.R
 #' @returns a list of objects you might need in RCS plot
 
@@ -155,11 +155,11 @@ regRcs.lm <- function(model, knots = 5, ...){
     form <- paste0(outcome, "~", rcsPart, "+", paste0(covariate, collapse = "+"))
   }
 
-  fit <- rms::ols(formula = formula(form), data = data, ...)
+  fit <- rms::ols(formula = formula(form), data = data)
   a <- stats::anova(fit) %>%
     as.data.frame()
   p_nonlinear <- ifelse(a$P[[2]]==0,"<0.0001", round(a$P[[2]], 4))
-  fitPred <- rms::Predict(fit, name = target)
+  fitPred <- rms::Predict(fit, name = target, ...)
   df <- data.frame(
     yhat = fitPred[["yhat"]],
     yhatLead = dplyr::lead(fitPred[["yhat"]]),
