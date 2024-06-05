@@ -4,16 +4,12 @@
 \alias{regRcs.glm}
 \title{draw RCS}
 \usage{
-\method{regRcs}{glm}(model, knots = 5, ref.zero = T, fun = exp)
+\method{regRcs}{glm}(model, knots = 5, ...)
 }
 \arguments{
 \item{model}{your logistic model}
 
 \item{knots}{the numerb of knots you want to use, default is 5}
-
-\item{ref.zero}{whether you want to set the reference point to 0, default is TRUE}
-
-\item{fun}{whether you want to use fun in Predict function, default is NULL}
 
 \item{...}{Other arguments of rms::Predict function}
 }

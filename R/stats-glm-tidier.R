@@ -161,8 +161,6 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
 #' draw RCS
 #' @param model your logistic model
 #' @param knots the numerb of knots you want to use, default is 5
-#' @param ref.zero whether you want to set the reference point to 0, default is TRUE
-#' @param fun whether you want to use fun in Predict function, default is NULL
 #' @param ... Other arguments of rms::Predict function
 #' @seealso [rms::lrm()]
 #' @example demo/stats-lm-rcs_demo.R
@@ -176,7 +174,7 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
 
 
 
-regRcs.glm <- function(model, knots = 5, ref.zero = T, fun = exp){
+regRcs.glm <- function(model, knots = 5, ...){
   target <- all.vars(model[["terms"]])[2]  # This function can not promise to get the formula
   outcome <- all.vars(model[["terms"]])[1]
   formulaLengthLessThan3 <- length(all.vars(model[["terms"]])) < 3
@@ -199,7 +197,7 @@ regRcs.glm <- function(model, knots = 5, ref.zero = T, fun = exp){
   a <- stats::anova(fit) %>%
     as.data.frame()
   p_nonlinear <- ifelse(a$P[[2]]==0,"<0.0001", round(a$P[[2]], 4))
-  fitPred <- rms::Predict(fit, name = target, ref.zero = ref.zero, fun = fun)
+  fitPred <- rms::Predict(fit, name = target, ...)
   df <- data.frame(
     yhat = fitPred[["yhat"]],
     yhatLead = dplyr::lead(fitPred[["yhat"]]),
