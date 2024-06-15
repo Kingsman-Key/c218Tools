@@ -24,6 +24,6 @@ sbjCnc <- function(mesh, st, toClip = FALSE, ...){
       close(clip)
     }
   }
-  return(c)
+  return(d)
 }
 
