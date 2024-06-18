@@ -59,12 +59,12 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
   res <- model %>%
     broom::tidy(x = ., exponentiate = exponentiate, conf.int = TRUE) %>%
     dplyr::mutate(
-      beta = sprintf("%.2f", estimate),
-      up = sprintf("%.2f", conf.high),
-      low = sprintf("%.2f", conf.low),
-      or = sprintf("%.2f", estimate),
+      beta = sprintf(digitsToApply, estimate),
+      up = sprintf(digitsToApply, conf.high),
+      low = sprintf(digitsToApply, conf.low),
+      or = sprintf(digitsToApply, estimate),
       or95.s1 = paste0(or, " (", low, ", ", up, ")"),
-      se = sprintf("%.2f", std.error),
+      se = sprintf(digitsToApply, std.error),
       betase.s1 = paste0(beta, " (", se, ")"),
       pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(

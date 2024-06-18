@@ -47,12 +47,12 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
   pDigitsToApply <- paste0("%.", pDigits, "f")
   res <- broom::tidy(x = model, exponentiate = T, conf.int = T) %>%
     dplyr::mutate(
-      beta = base::sprintf("%.2f", estimate),
-      up = base::sprintf("%.2f", conf.high),
-      low = base::sprintf("%.2f", conf.low),
-      or = base::sprintf("%.2f", estimate),
+      beta = base::sprintf(digitsToApply, estimate),
+      up = base::sprintf(digitsToApply, conf.high),
+      low = base::sprintf(digitsToApply, conf.low),
+      or = base::sprintf(digitsToApply, estimate),
       or95.s1 = paste0(or, " (", low, ", ", up, ")"),
-      se = base::sprintf("%.2f", std.error),
+      se = base::sprintf(digitsToApply, std.error),
       betase.s1 = paste0(beta, " (", se, ")"),
       pvalue.4dPre = sprintf(pDigitsToApply, p.value),
       pvalue.4d = case_when(
