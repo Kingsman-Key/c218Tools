@@ -16,7 +16,6 @@ Imports:
     dplyr,
     magrittr,
     rms,
-    speedglm,
     stats,
     stringr,
     tidyr,
@@ -28,5 +27,6 @@ Suggests:
     flextable,
     ftExtra,
     geepack,
+    speedglm,
     survival
 Config/testthat/edition: 3
