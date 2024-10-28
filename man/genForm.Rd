@@ -4,14 +4,16 @@
 \alias{genForm}
 \title{Formula generator}
 \usage{
-genForm(outcome, exposure, covariate)
+genForm(outcome, exposure, covariate, sensitivity = F)
 }
 \arguments{
 \item{outcome}{outcome of your regression.}
 
 \item{exposure}{exposure you are interested in.}
 
-\item{covariate}{covariate you want to adjust. If you want to generate formula with several batch of variables to adjust. please provide}
+\item{covariate}{covariate you want to adjust. If you want to generate formula with several batch of variables to adjust. please provide a list of vectors}
+
+\item{sensitivity}{whether to generate forumla for sensitivity analysis. Default is FALSE.}
 }
 \description{
 Formula generator

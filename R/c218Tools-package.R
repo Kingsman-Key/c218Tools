@@ -11,6 +11,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom rms datadist
 #' @importFrom rms ols
+#' @importFrom speedglm speedglm
 #' @importFrom stats anova
 #' @importFrom stats as.formula
 #' @importFrom stringr str_detect
