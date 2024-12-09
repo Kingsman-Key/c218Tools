@@ -216,7 +216,7 @@ regRcs.glm <- function(model, knots = 5, ...){
   minimumY <- df %>%
     dplyr::filter(yhat - yhatLead <0 & yhat - yhatLag < 0) %>%
     pull(yhat)
-  if(length(maximumY) > 0){
+  if(length(minimumY) > 0){
     minimumX <- df %>%
       dplyr::filter(yhat == minimumY) %>%
       pull(1)

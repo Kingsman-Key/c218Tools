@@ -96,7 +96,8 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
     dplyr::slice(n1:n2)
   )
   if(n1 == 1){
-    res[1,] <- "Ref."
+    res[1,which(str_detect(names(res, "or")))] <- "Ref."
+    res[1,which(str_detect(names(res, "pvalue")))] <- "-"
   }
 
   if(toClip == T){
