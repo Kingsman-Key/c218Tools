@@ -100,8 +100,8 @@ sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALS
     tidyr::pivot_wider(data = ., id_cols = term, names_from = y.level, values_from = -c(y.level, term)) %>%
     dplyr::slice(n1:n2)
   if(n1 == 1){
-    res[1,which(str_detect(names(res, "or")))] <- "Ref."
-    res[1,which(str_detect(names(res, "pvalue")))] <- "-"
+    res[1,which(str_detect(names(res), "or"))] <- "Ref."
+    res[1,which(str_detect(names(res), "pvalue"))] <- "-"
   }
 
   if(toClip == TRUE){
