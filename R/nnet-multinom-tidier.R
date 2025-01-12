@@ -17,7 +17,7 @@
 sumReg.multinom <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, regressionTableOnly = T, ...){
   target <- all.vars(model[["terms"]])[2]
   outcome <- all.vars(model[["terms"]])[1]
-  data <- get(model[["call"]][["data"]])
+  data <- model.frame(model)
   # judge n1 and n2
 
   n1n2BothNull <- is.null(n1) & is.null(n2)
