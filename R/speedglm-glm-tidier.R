@@ -7,6 +7,7 @@
 #' @template paramUnusedDots
 #' @template paramDigits
 #' @template paramAdjustOutcome
+#' @param exponentiate whether to exponentiate the coefficients (default is TRUE)
 #' @seealso [write.table()] [broom::tidy()]
 #' @export
 #' @return return a tibble of regression table
@@ -19,7 +20,7 @@
 #' In academic paper, only one or two lines of regression tables were shown rather than the whole table. Since we are only interested in the specific exposure. Thus, n1 stands for the line started from which we want to extract results. n2 stands for the line to which we want to extract. Normally, you do not need to change them since this package take the first independent variable in your regression model as the variable you are interested in. It will detect which line to take from the final table.
 
 
-sumReg.speedglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, regressionTableOnly = T, ...){
+sumReg.speedglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, regressionTableOnly = T, exponentiate = T, ...){
   target <- all.vars(as.formula(model[["formula"]]))[2]
   outcome <- all.vars(as.formula(model[["formula"]]))[1]
   data <- model[["model"]]
@@ -49,11 +50,7 @@ sumReg.speedglm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FAL
   }
   outcome <- all.vars(as.formula(model[["formula"]]))[1]
   outcomeCategory <- c218Tools::detectOutcomeLevels(outcome = outcome, data = data)
-  if(outcomeCategory == "continuous"){
-    exponentiate <- FALSE
-  }else if(outcomeCategory == "categorical"){
-    exponentiate <- TRUE
-  }
+
   digitsToApply <- paste0("%.", digits, "f")
   pDigitsToApply <- paste0("%.", pDigits, "f")
   res <- model %>%
