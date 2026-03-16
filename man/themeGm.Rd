@@ -21,8 +21,7 @@ In academic paper, we use three line table. This is a simpilified version to exp
 \examples{
 # examples
 
-
-iris \%>\%
-  flextable() \%>\%
+iris |>
+  flextable::flextable() |>
   themeGm()
 }

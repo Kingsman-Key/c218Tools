@@ -1,6 +1,6 @@
 # example code
 
-df <- iris %>%
+df <- iris |>
   dplyr::mutate(
     Petal.Length.2f = case_when(
       Petal.Length < 2 ~ "small",

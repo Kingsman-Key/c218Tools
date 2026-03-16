@@ -9,7 +9,8 @@ regDisplay(
   exposure,
   covariate,
   data,
-  regType = list("lm", "glm", "multinom", "coxph", "gee"),
+  regType = c("lm", "glm", "multinom", "coxph", "gee"),
+  sumRegArgs = list(),
   ...
 )
 }
@@ -23,6 +24,8 @@ regDisplay(
 \item{data}{your data}
 
 \item{regType}{determine the regression type you want to use, including `lm`,`glm`,`multinom`,`coxph`,`gee`.}
+
+\item{sumRegArgs}{other arguments that you can pass to sumReg}
 
 \item{...}{other arguments for according linear model}
 }

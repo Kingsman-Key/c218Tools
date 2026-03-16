@@ -5,11 +5,16 @@
 #' @param data your data
 #' @param regType determine the regression type you want to use, including `lm`,`glm`,`multinom`,`coxph`,`gee`.
 #' @param ... other arguments for according linear model
+#' @param sumRegArgs other arguments that you can pass to sumReg
 #' @seealso [geepack::geeglm()][survival::coxph()][stats::lm()][stats::glm()][nnet::multinom()]
 #' @example demo/regDisplay_demo.R
 #' @export
 
-regDisplay <- function(outcome, exposure, covariate, data, regType = list("lm", "glm", "multinom", "coxph", "gee"), ...){
+regDisplay <- function(outcome, exposure, covariate, data,
+                       regType = c("lm", "glm", "multinom", "coxph", "gee"),
+                       sumRegArgs = list(),
+                       ...){
+  regType <- match.arg(regType)
   ## check the input
   outcomeLengthMoreThan1 <- length(outcome) > 1
   exposureLengthMoreThan1 <- length(exposure) > 1
@@ -24,7 +29,6 @@ regDisplay <- function(outcome, exposure, covariate, data, regType = list("lm", 
     }) %>% unlist()
   }else if(exposureLengthIs1){
     form <- c218Tools::genForm(outcome = outcome, exposure = exposure, covariate = covariate)
-
   }
   res <- lapply(X = form, function(x){
     outcomeVector <- data[[all.vars(formula(x))[1]]]
@@ -37,25 +41,25 @@ regDisplay <- function(outcome, exposure, covariate, data, regType = list("lm", 
 
     if(regType == "lm"){
       fit <- stats::lm(formula = formula(x), data = data, ...)
-      res <- sumReg(model = fit)
+      res <- do.call(sumReg, c(list(model = fit), sumRegArgs))
     }else if(regType == "glm" & outcomeIsNumeric){
       fit <- stats::glm(formula = formula(x), data = data, ...)
-      res <- sumReg(model = fit)
+      res <- do.call(sumReg, c(list(model = fit), sumRegArgs))
     }else if(regType == "glm" & (outcomeIs2LevelFactor|outcomeIs2LevelCharacter|outcomeIsLogical)){
       fit <- stats::glm(formula = formula(x), family = "binomial", data = data, ...)
-      res <- sumReg(model = fit)
+      res <- do.call(sumReg, c(list(model = fit), sumRegArgs))
     }else if(regType == "multinom"){
       fit <- nnet::multinom(formula = formula(x), data = data, ...)
-      res <- sumReg(model = fit)
+      res <- do.call(sumReg, c(list(model = fit), sumRegArgs))
     }else if(regType == "coxph"){
       fit <- survival::coxph(formula = formula(x), data = data, ...)
-      res <- sumReg(model = fit)
+      res <- do.call(sumReg, c(list(model = fit), sumRegArgs))
     }else if(regType == "gee" & outcomeIsNumeric){
       fit <- geepack::geeglm(formula = formula(x), data = data, ...)
-      res <- sumReg(model = fit)
+      res <- do.call(sumReg, c(list(model = fit), sumRegArgs))
     }else if(regType == "gee" & (outcomeIs2LevelFactor|outcomeIs2LevelCharacter|outcomeIsLogical)){
       fit <- geepack::geeglm(formula = formula(x), data = data, family = "binomial", ...)
-      res <- sumReg(model = fit)
+      res <- do.call(sumReg, c(list(model = fit), sumRegArgs))
     }
   })
   exposureLength <- length(exposure)

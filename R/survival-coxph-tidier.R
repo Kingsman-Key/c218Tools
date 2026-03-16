@@ -17,20 +17,21 @@
 
 sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, regressionTableOnly = T, ...){
   target <- all.vars(as.formula(model[["formula"]]))[3]
-  data <- get(model[["call"]][["data"]])
+  outcome <- all.vars(as.formula(model[["formula"]]))[1]
+  data <- get(as.character(model[["call"]][["data"]]))
 
+  # define target type at top level so it's always available
+  targetIsNumeric <- is.numeric(data[[target]])
+  targetIsCharacterOrFactor <- is.character(data[[target]]) | is.factor(data[[target]])
 
   # judge n1 and n2
-
   n1n2BothNull <- is.null(n1) & is.null(n2)
   n1n2OneNull <- (!is.null(n1) & is.null(n2)) | (is.null(n1) & !is.null(n2))
   if(n1n2BothNull|n1n2OneNull){
-    targetIsNumeric <- is.numeric(data[[target]])
     if(targetIsNumeric){
       n1 <- 1
       n2 <- 1
     }
-    targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
       n1 <- 1
       n2 <- c218Tools::detectTargetLevels(target = target, data = data) - 1
@@ -89,48 +90,48 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
       )
     )
 
-    res <- res %>%
-      dplyr::select(term, contains("or95"), pvalue.4d)
+  res <- res %>%
+    dplyr::select(term, contains("or95"), pvalue.4d)
 
-    if(latex == TRUE & pType == "mark"){ # determine which part should be exported
-      type <- "latexMark"
-    }else if(pType == "value"){
-      type <- "value"
-    }else if(latex == F & pType == "mark"){
-      type <- "excelMark"
-    }
-    index <- which(type == c("latexMark", "value", "excelMark"))
-    res <- switch(index, {
-      res %>% #latex mark
-        dplyr::select(term, or95.mark.latex) %>%
-        dplyr::slice(n1:n2)
-    },
-    {
-      res %>% # value
-        dplyr::select(term, or95.s1, pvalue.4d) %>%
-        dplyr::slice(n1:n2)
-    },
-    {
-      res %>% # value
-        dplyr::select(term, or95.mark.excel) %>%
-        dplyr::slice(n1:n2)
-    }
-    )
+  if(latex == TRUE & pType == "mark"){ # determine which part should be exported
+    type <- "latexMark"
+  }else if(pType == "value"){
+    type <- "value"
+  }else if(latex == F & pType == "mark"){
+    type <- "excelMark"
+  }
+  index <- which(type == c("latexMark", "value", "excelMark"))
+  res <- switch(index, {
+    res %>% #latex mark
+      dplyr::select(term, or95.mark.latex) %>%
+      dplyr::slice(n1:n2)
+  },
+  {
+    res %>% # value
+      dplyr::select(term, or95.s1, pvalue.4d) %>%
+      dplyr::slice(n1:n2)
+  },
+  {
+    res %>% # value
+      dplyr::select(term, or95.mark.excel) %>%
+      dplyr::slice(n1:n2)
+  }
+  )
 
   # if(n1 == 1){
   #   res[1,] <- "Ref."
   # }
   ## generate description data
-    outcomeCategory <- "categorical"
-    if(outcomeCategory == "categorical" & targetIsCharacterOrFactor){
-      colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
-      freq <- table(data[[target]], data[[outcome]])
-      des <- paste0(freq, " (", colPercent, ")") %>%
-        matrix(., nrow = length(table(data[[target]])))
-      # res <- cbind(res[,1], des, res[,-1])
-    }else{
-      des <- NULL
-    }
+  outcomeCategory <- "categorical"
+  if(outcomeCategory == "categorical" & targetIsCharacterOrFactor){
+    colPercent <- matrix(sprintf("%.2f",prop.table(table(data[[target]], data[[outcome]]), margin = 2)*100), nrow = length(table(data[[target]])))
+    freq <- table(data[[target]], data[[outcome]])
+    des <- paste0(freq, " (", colPercent, ")") %>%
+      matrix(., nrow = length(table(data[[target]])))
+    # res <- cbind(res[,1], des, res[,-1])
+  }else{
+    des <- NULL
+  }
   if(toClip == TRUE){
     if(.Platform$OS.type == "windows"){
       write.table(x = res, file = "clipboard", quote = FALSE, sep = "\t", ...)
@@ -151,4 +152,3 @@ sumReg.coxph <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,
     return(resList)
   }
 }
-

@@ -17,6 +17,7 @@ Imports:
     flextable,
     magrittr,
     rms,
+    speedglm,
     stats,
     stringr,
     tidyr,
@@ -27,6 +28,5 @@ Suggests:
     nnet,
     ftExtra,
     geepack,
-    speedglm,
     survival
 Config/testthat/edition: 3

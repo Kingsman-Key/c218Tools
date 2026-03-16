@@ -24,17 +24,19 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
   target <- all.vars(as.formula(model[["formula"]]))[2]
   outcome <- all.vars(as.formula(model[["formula"]]))[1]
   data <- model[["model"]]
-  # judge n1 and n2
 
+  # define target type at top level so it's always available
+  targetIsNumeric <- is.numeric(data[[target]])
+  targetIsCharacterOrFactor <- is.character(data[[target]]) | is.factor(data[[target]])
+
+  # judge n1 and n2
   n1n2BothNull <- is.null(n1) & is.null(n2)
   n1n2OneNull <- (!is.null(n1) & is.null(n2)) | (is.null(n1) & !is.null(n2))
   if(n1n2BothNull|n1n2OneNull){
-    targetIsNumeric <- is.numeric(data[[target]])
     if(targetIsNumeric){
       n1 <- 2
       n2 <- 2
     }
-    targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
       n1 <- 1
       n2 <- c218Tools::detectTargetLevels(target = target, data = data)
@@ -127,8 +129,8 @@ sumReg.glm <- function(model ,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pT
       matrix(., nrow = length(table(data[[target]])))
     # res <- cbind(res[,1], des, res[,-1])
   }else{
-      des <- NULL
-    }
+    des <- NULL
+  }
 
   if(toClip == T){
     if(.Platform$OS.type == "windows"){
@@ -222,9 +224,3 @@ regRcs.glm <- function(model, knots = 5, ...){
   resList <- list(fitPred = fitPred, pNonLinear = p_nonlinear, minimumX = minimumX, maximumX = maximumX)
   return(resList)
 }
-
-
-
-
-
-

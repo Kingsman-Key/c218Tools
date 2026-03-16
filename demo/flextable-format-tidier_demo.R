@@ -1,6 +1,5 @@
 # examples
 
-
-iris %>%
-  flextable() %>%
+iris |>
+  flextable::flextable() |>
   themeGm()

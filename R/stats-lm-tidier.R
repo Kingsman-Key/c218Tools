@@ -17,18 +17,22 @@
 
 sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pType = "mark", digits = 2, pDigits = 4, regressionTableOnly = T, ...){
   target <- all.vars(model[["terms"]])[2]  # This function can not promise to get the formula
+  outcome <- all.vars(model[["terms"]])[1]
   data <- model[["model"]]
-  # judge n1 and n2
 
+  # define target type at top level so it's always available
+  targetIsNumericOrLogical <- is.numeric(data[[target]]) | is.logical(data[[target]])
+  targetIsCharacterOrFactor <- is.character(data[[target]]) | is.factor(data[[target]])
+  outcomeCategory <- c218Tools::detectOutcomeLevels(outcome = outcome, data = data)
+
+  # judge n1 and n2
   n1n2BothNull <- is.null(n1) & is.null(n2)
   n1n2OneNull <- (!is.null(n1) & is.null(n2)) | (is.null(n1) & !is.null(n2))
   if(n1n2BothNull|n1n2OneNull){
-    targetIsNumericOrLogical <- is.numeric(data[[target]])|is.logical(data[[target]])
     if(targetIsNumericOrLogical){
       n1 <- 2
       n2 <- c218Tools::detectTargetLevels(target = target, data = data)
     }
-    targetIsCharacterOrFactor <- is.character(data[[target]])|is.factor(data[[target]])
     if(targetIsCharacterOrFactor){
       n1 <- 1
       n2 <- c218Tools::detectTargetLevels(target = target, data = data)
@@ -111,11 +115,12 @@ sumReg.lm <- function(model,n1 = NULL,n2 = NULL,latex = TRUE,toClip = FALSE,pTyp
     }
   }
   res[] <- lapply(res[], as.character)
+  tableName <- names(res)
 
   if(regressionTableOnly == T){
     return(res)
   }else if(regressionTableOnly == F){
-    resList <- list(regressionTable = res, model = "glm", outcomeCategory = outcomeCategory, tableName = tableName, descriptionStatistics = NULL)
+    resList <- list(regressionTable = res, model = "lm", outcomeCategory = outcomeCategory, tableName = tableName, descriptionStatistics = NULL)
     class(resList) <- "sumReg"
     return(resList)
   }
@@ -179,7 +184,7 @@ regRcs.lm <- function(model, knots = 5, ...){
   minimumY <- df %>%
     dplyr::filter(yhat - yhatLead <0 & yhat - yhatLag < 0) %>%
     pull(yhat)
-  if(length(maximumY) > 0){
+  if(length(minimumY) > 0){
     minimumX <- df %>%
       dplyr::filter(yhat == minimumY) %>%
       pull(1)
@@ -189,9 +194,3 @@ regRcs.lm <- function(model, knots = 5, ...){
   resList <- list(fitPred = fitPred, pNonLinear = p_nonlinear, minimumX = minimumX, maximumX = maximumX)
   return(resList)
 }
-
-
-
-
-
-

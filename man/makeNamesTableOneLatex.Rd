@@ -31,7 +31,7 @@ In academic paper, only one or two lines of regression tables were shown rather 
 \examples{
 # example code
 
-df <- iris \%>\%
+df <- iris |>
   dplyr::mutate(
     Petal.Length.2f = case_when(
       Petal.Length < 2 ~ "small",
