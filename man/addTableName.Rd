@@ -4,14 +4,16 @@
 \alias{addTableName}
 \title{Function To add table name}
 \usage{
-addTableName(tableName, align = "left", colwidths)
+addTableName(x, tableName, align = "left", colwidths = NULL)
 }
 \arguments{
+\item{x}{a flextable object}
+
+\item{tableName}{the table name (caption) to add on top of the table}
+
 \item{align}{align of the table name. It includes left, right and center}
 
-\item{colwidths}{colwidth. It saves time to use col_keys length}
-
-\item{x}{a flextable object}
+\item{colwidths}{colwidth. It saves time to use col_keys length. If NULL (default), it spans all columns.}
 }
 \value{
 return a flextable that meets the need of academic paper

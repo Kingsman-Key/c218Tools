@@ -27,16 +27,19 @@ themeGm <- function(x){
 
 #' Function To add table name
 #' @param x a flextable object
+#' @param tableName the table name (caption) to add on top of the table
 #' @param align align of the table name. It includes left, right and center
-#' @param colwidths colwidth. It saves time to use col_keys length
+#' @param colwidths colwidth. It saves time to use col_keys length. If NULL (default), it spans all columns.
 #' @export
 #' @return return a flextable that meets the need of academic paper
 #' @example demo/flextable-format-tidier_demo.R
 #' @details
 #' In academic paper, we use three line table. This is a simpilified version to export the table to save time for group meeting.
 
-addTableName <- function(tableName, align = "left", colwidths){
-
+addTableName <- function(x, tableName, align = "left", colwidths = NULL){
+  if(is.null(colwidths)){
+    colwidths <- length(x$col_keys)
+  }
   x <- flextable::add_header_row(x = x, top = T, values = c(tableName), colwidths = colwidths) %>%
     flextable::align(x = ., i = 1, part = "header", align = align) %>%
     flextable::hline_top(border = flextable::fp_border_default(width = 0), part = "header")
@@ -47,14 +50,19 @@ addTableName <- function(tableName, align = "left", colwidths){
 
 #' Function To set table style
 #' @param x a flextable object
+#' @param tableName the table name (caption) to add on top of the table
+#' @param align align of the table name. It includes left, right and center
+#' @param colwidths colwidth. It saves time to use col_keys length. If NULL (default), it spans all columns.
 #' @export
 #' @return return a flextable that meets the need of academic paper
 #' @example demo/flextable-format-tidier_demo.R
 #' @details
 #' In academic paper, we use three line table. This is a simpilified version to export the table to save time for group meeting.
 
-formatTable <- function(x){
-
+formatTable <- function(x, tableName, align = "left", colwidths = NULL){
+  if(is.null(colwidths)){
+    colwidths <- length(x$col_keys)
+  }
   x <- flextable::add_header_row(x = x, top = T, values = c(tableName), colwidths = colwidths) %>%
     flextable::align(x = ., i = 1, part = "header", align = align) %>%
     ftExtra::colformat_md(x = ., part = "all")
