@@ -1,3 +1,10 @@
+# c218Tools 0.2.1
+
+## New features
+
+* `cuteArt()`: print a cute ASCII art (cat / bear / rabbit / dog / panda) to the
+  console. Just for fun / testing.
+
 # c218Tools 0.2.0
 
 ## New features
